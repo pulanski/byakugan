@@ -1,0 +1,21 @@
+rust_library(
+    name = "driver",
+    srcs = glob(["src/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        "//crates/lib/utils:utils",
+        "//third-party:anyhow",
+        "//third-party:clap",
+    ],
+    visibility = ["PUBLIC"],
+)
+
+rust_test(
+    name = "driver_test",
+    srcs = glob(["tests/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        ":driver",
+    ],
+    visibility = ["PUBLIC"],
+)

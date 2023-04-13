@@ -1,0 +1,7 @@
+/.buckd
+buck-out/
+/Cargo.lock
+target
+/store/
+.git
+.sl

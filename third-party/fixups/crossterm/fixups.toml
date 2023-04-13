@@ -1,0 +1,6 @@
+cargo_env = true
+extra_deps = [":libc", ":mio", ":signal-hook-mio", ":signal-hook"]
+features = ["event-stream"]
+
+[[buildscript]]
+[buildscript.build]

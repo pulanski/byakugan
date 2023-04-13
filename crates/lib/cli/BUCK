@@ -1,0 +1,20 @@
+rust_library(
+    name = "cli",
+    srcs = glob(["src/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        "//third-party:anyhow",
+        "//third-party:clap",
+    ],
+    visibility = ["PUBLIC"],
+)
+
+rust_test(
+    name = "cli_test",
+    srcs = glob(["tests/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        ":cli",
+    ],
+    visibility = ["PUBLIC"],
+)

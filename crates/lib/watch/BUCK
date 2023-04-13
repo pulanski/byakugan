@@ -1,0 +1,29 @@
+rust_library(
+    name = "watch",
+    srcs = glob(["src/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        "//third-party:anyhow",
+        "//third-party:derive-new",
+        "//third-party:derive_more",
+        "//third-party:downcast-rs",
+        "//third-party:dyn-clone",
+        "//third-party:getset",
+        "//third-party:serde",
+        "//third-party:shrinkwraprs",
+        "//third-party:smartstring",
+        "//third-party:once_cell",
+        "//third-party:owo-colors",
+    ],
+    visibility = ["PUBLIC"],
+)
+
+rust_test(
+    name = "watch_test",
+    srcs = glob(["tests/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        ":watch",
+    ],
+    visibility = ["PUBLIC"],
+)

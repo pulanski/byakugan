@@ -1,0 +1,25 @@
+rust_library(
+    name = "utils",
+    srcs = glob(["src/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        "//third-party:anyhow",
+        "//third-party:derive-new",
+        "//third-party:derive_more",
+        "//third-party:getset",
+        "//third-party:serde",
+        "//third-party:once_cell",
+        "//third-party:owo-colors",
+    ],
+    visibility = ["PUBLIC"],
+)
+
+rust_test(
+    name = "utils_test",
+    srcs = glob(["tests/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        ":utils",
+    ],
+    visibility = ["PUBLIC"],
+)

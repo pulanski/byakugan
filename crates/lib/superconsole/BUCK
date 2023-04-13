@@ -1,0 +1,61 @@
+# rust_library(
+#     name = "superconsole",
+#     srcs = glob(
+#         ["src/**/*.rs"],
+#     ),
+#     crate_root = "src/lib.rs",
+#     deps = [
+#         "//third-party:anyhow",
+#         "//third-party:crossbeam-channel",
+#         "//third-party:derive_more",
+#         "//third-party:crossterm",
+#         "//third-party:itertools",
+#         "//third-party:termwiz",
+#         "//third-party:thiserror",
+#         "//third-party:unicode-segmentation",
+#     ],
+# )
+
+# rust_binary(
+#     name = "cargo",
+#     srcs = ["examples/cargo.rs"] + glob([
+#         "examples/cargo/**",
+#     ]),
+#     crate_root = "examples/cargo.rs",
+#     deps = [
+#         "//third-party:anyhow",
+#         ":superconsole",
+#     ],
+# )
+
+# rust_binary(
+#     name = "finalization",
+#     srcs = ["examples/finalization.rs"],
+#     deps = [
+#         "//third-party:anyhow",
+#         "//third-party:derive_more",
+#         "//third-party:tokio",
+#         ":superconsole",
+#     ],
+# )
+
+# rust_binary(
+#     name = "hello_world",
+#     srcs = ["examples/hello_world.rs"],
+#     deps = [
+#         "//third-party:anyhow",
+#         "//third-party:tokio",
+#         ":superconsole",
+#     ],
+# )
+
+# rust_binary(
+#     name = "stylized",
+#     srcs = ["examples/stylized.rs"],
+#     deps = [
+#         "//third-party:anyhow",
+#         "//third-party:derive_more",
+#         "//third-party:tokio",
+#         ":superconsole",
+#     ],
+# )

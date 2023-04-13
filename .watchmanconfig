@@ -1,0 +1,6 @@
+{
+    "ignore_dirs": [
+        "buck-out"
+    ],
+    "content_hash_warming": true
+}

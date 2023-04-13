@@ -1,0 +1,10 @@
+rust_binary(
+    name = "syntax",
+    srcs = glob(["src/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        "//crates/lib/watch:watch",
+        "//crates/lib/utils:utils",
+    ],
+    visibility = ["PUBLIC"],
+)
