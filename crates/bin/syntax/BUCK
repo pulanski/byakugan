@@ -5,6 +5,7 @@ rust_binary(
     deps = [
         "//crates/lib/watch:watch",
         "//crates/lib/utils:utils",
+        "//third-party:rand",
     ],
     visibility = ["PUBLIC"],
 )

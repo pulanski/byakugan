@@ -7267,6 +7267,12 @@ third_party_rust_library(
     ],
 )
 
+alias(
+    name = "rand",
+    actual = ":rand-0.8.5",
+    visibility = ["PUBLIC"],
+)
+
 third_party_rust_library(
     name = "rand-0.8.5",
     srcs = [
@@ -7307,6 +7313,7 @@ third_party_rust_library(
         "libc",
         "rand_chacha",
         "rustc_private",
+        "small_rng",
         "std",
         "std_rng",
     ],

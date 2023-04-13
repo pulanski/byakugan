@@ -9,3 +9,6 @@ authors = ["pulanski"]
 [dependencies]
 watch = { path = "../../lib/watch" }
 utils = { path = "../../lib/utils" }
+cli = { path = "../../lib/cli" }
+
+clap = { workspace = true }

@@ -10,7 +10,7 @@ members = [
 [workspace.package]
 name = "byakugan"
 version = "0.1.0"
-description = "File system watcher and assertion runner similar to `entr`, `watchexec`, `watchman` and `cargo watch`"
+description = "Tool for file system watching in the context of build systems that allows you to monitor a directory and automatically trigger builds or tests whenever its contents change. Byakugan is written with Starlark-based build systems in mind (such as Buck, Buck2, and Bazel), and provides an easy-to-use command-line interface for running and managing builds, tests, and other tasks (e.g. running a web server binary similar to `buck2 run //:web-server` or `bazel run //:web-server`)."
 authors = ["<iopulanski@gmail.com>"]
 repository = "https://github.com/pulanski/byakugan"
 license-file = "LICENSE"
@@ -65,7 +65,7 @@ chalk-solve = { version = "0.90.0", default-features = false }
 chalk-ir = "0.90.0"
 chalk-recursive = { version = "0.90.0", default-features = false }
 chrono = "=0.4.19"                                                 # Avoid a dependency iana-time-zone, which requires a fixup
-# clap = { package = "clap", version = "4.0.7", features = ["derive", "env"] }
+# clap = "4.0.7"
 clap = { version = "4", default-features = false, features = [
     "error-context",
     "help",
@@ -87,7 +87,11 @@ cov-mark = "1.1.0"
 crossbeam = "0.8.2"
 crossbeam-channel = "0.5.7"
 crossbeam-epoch = "0.9.14"
-# crossterm = "0.26.1"
+crossterm = { version = "0.26.1", default-features = false, features = [
+    "event-stream",
+] }
+signal-hook-mio = { version = "0.2.3", features = ["support-v0_7"] }
+signal-hook = "0.3.9"
 # cstree = "0.11.1"
 csv = "1.1"
 ctor = "0.2.0"
@@ -101,10 +105,10 @@ derive-new = "0.5.9"
 # dirs-next = "2.0.0"
 dissimilar = "1.0.6"
 doc-comment = "0.3.3"
-dot = "0.1.4"
 downcast-rs = "1.2.0"
+dot = "0.1.4"
 drop_bomb = "0.1.5"
-dunce = "1.0.2"
+dunce = "1.0.3"
 dyn-clone = "1.0.11"
 objekt-clonable = "0.2.2"
 either = "1.8"
@@ -166,13 +170,14 @@ logos = "0.13.0"
 logos-derive = "0.13.0"
 lsp-server = "0.7.0"
 lsp-types = "0.94.0"
-# miette = { version = "5.5.0", features = ["fancy"] }
 maplit = "1.0.2"
 memchr = "2.4.1"
 # memmap2 = "0.5.0"
 memoffset = "0.8.0"
+# miette = { version = "5.5.0", features = ["fancy"] }
 mimalloc = { version = "0.1.29", default-features = false }
 mime = "0.3.16"
+mio = { version = "0.8.6", features = ["os-ext"] }
 multimap = "0.9.0"
 # names = "0.14.0"
 # nanoid = "0.4.0"
@@ -208,7 +213,7 @@ prost-types = "0.11.6"
 pulldown-cmark = { version = "0.9.2", default-features = false }
 pulldown-cmark-to-cmark = "10.0.4"
 quote = "1.0.23"
-# rand = { version = "0.8.5", features = ["small_rng"] }
+rand = { version = "0.8.5", features = ["small_rng"] }
 radix_trie = "0.2.1"
 rand_chacha = "0.3"
 # rand_distr = "0.4"
@@ -232,7 +237,7 @@ rstest = "0.17.0"
 rustc-hash = "1.1.0"
 # rust-i18n = "1.1.1"
 rustc-serialize = "0.3.24"
-# rusty_ulid = "2.0.0" # getrandom errors with libc
+# rustix = "0.37.11"
 # rusqlite = "0.29.0"
 # salsa = { git = "https://github.com/salsa-rs/salsa", package = "salsa-2022" }
 # scip = "0.1.1"
@@ -267,14 +272,15 @@ smartstring = "1.0.1"
 smol_str = "0.1.24"
 # snap = "1.1.0"
 # sorted_vector_map = "0.1"
-starlark = "0.8.0"
+# starlark = "0.8.0"
 static_assertions = "1.1.0"
 strsim = "0.10.0"
 str_sim = "0.1.2"
-# superconsole = "0.1.0"
-symlink = "0.1.0"           # structopt = "0.3.23"
+# structopt = "0.3.23"
 # strum = { version = "0.24", features = ["derive"] }
 # strum_macros = "0.24.3"
+# superconsole = "0.1.0"
+symlink = "0.1.0"
 syn = { version = "2.0.13", features = ["extra-traits", "full", "visit"] }
 sync_wrapper = "0.1.0"
 sys-info = "0.9.1"

@@ -2665,6 +2665,7 @@ dependencies = [
  "pulldown-cmark-to-cmark",
  "quote 1.0.26",
  "radix_trie",
+ "rand",
  "rand_chacha",
  "rand_regex",
  "rand_xorshift",
