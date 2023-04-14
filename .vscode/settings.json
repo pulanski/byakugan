@@ -1,0 +1,9 @@
+{
+    "buck.projectConfig": {
+        "projectPath": "/Users/jkersey/Desktop/dev/repos/personal/private/rust/byakugan",
+        "flavor": [],
+        "target": "",
+        "platform": "linux-x86_64"
+    },
+    "rust-analyzer.showUnlinkedFileNotification": false
+}

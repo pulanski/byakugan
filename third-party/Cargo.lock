@@ -1433,6 +1433,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "miette"
+version = "5.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7abdc09c381c9336b9f2e9bd6067a9a5290d20e2d2e2296f275456121c33ae89"
+dependencies = [
+ "miette-derive",
+ "once_cell",
+ "thiserror",
+ "unicode-width",
+]
+
+[[package]]
+name = "miette-derive"
+version = "5.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8842972f23939443013dfd3720f46772b743e86f1a81d120d4b6fb090f87de1c"
+dependencies = [
+ "proc-macro2 1.0.56",
+ "quote 1.0.26",
+ "syn 2.0.13",
+]
+
+[[package]]
 name = "mimalloc"
 version = "0.1.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2635,6 +2658,7 @@ dependencies = [
  "maplit",
  "memchr",
  "memoffset",
+ "miette",
  "mimalloc",
  "mime",
  "mio 0.8.6",

@@ -1,0 +1,29 @@
+[package]
+name = "diagnostics"
+description = "Diagnostics (warnings/error handling) for the different subsystems"
+keywords = ["diagnostics", "errors", "error handling"]
+
+version.workspace = true
+categories.workspace = true
+repository.workspace = true
+license.workspace = true
+edition.workspace = true
+authors.workspace = true
+readme.workspace = true
+
+[lib]
+doctest = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# codespan-reporting = { workspace = true }
+derivative = { workspace = true }
+getset = { workspace = true }
+miette = { workspace = true }
+owo-colors = { workspace = true }
+pretty_assertions_sorted = { workspace = true }
+rstest = { workspace = true }
+smartstring = { workspace = true }
+smol_str = { workspace = true }
+thiserror = { workspace = true }

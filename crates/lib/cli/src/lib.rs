@@ -5,6 +5,7 @@ mod flags;
 use clap::{Args, Parser, Subcommand};
 pub use entry::Byakugan;
 use getset::Getters;
+use smartstring::alias::String;
 
 // use leafc_cfg::settings::{
 //     meta::{pkg::EXE_NAME, version::LEAFC_VERSION},
@@ -30,6 +31,11 @@ pub struct ByakuganCli {
     subcommand: Command,
 }
 
+#[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
+pub struct Targets {
+    targets: Vec<String>,
+}
+
 #[derive(Subcommand, Debug, PartialEq, Eq, Hash)]
 pub enum Command {
     #[clap(
@@ -47,10 +53,18 @@ pub enum Command {
 }
 
 #[derive(Args, Debug, Default, PartialEq, Eq, Hash)]
-pub struct Build {}
+pub struct Build {
+    /// The targets to build (e.g. `//backend/go/web-server:web-server` or `//...`)
+    #[arg(required = true)]
+    targets: Vec<String>,
+}
 
 #[derive(Args, Debug, Default, PartialEq, Eq, Hash)]
-pub struct Run {}
+pub struct Run {
+    /// The target to run (e.g. `//backend/go/web-server:web-server`)
+    #[arg(required = true)]
+    targets: String,
+}
 
 #[derive(Args, Debug, Default, PartialEq, Eq, Hash)]
 pub struct Test {}

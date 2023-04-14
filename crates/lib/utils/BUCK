@@ -3,11 +3,18 @@ rust_library(
     srcs = glob(["src/**/*.rs"]),
     edition = "2021",
     deps = [
+        "//crates/lib/diagnostics:diagnostics",
         "//third-party:anyhow",
         "//third-party:derive-new",
         "//third-party:derive_more",
         "//third-party:getset",
+        "//third-party:lazy_static",
+        "//third-party:miette",
+        "//third-party:regex",
         "//third-party:serde",
+        "//third-party:shrinkwraprs",
+        "//third-party:smartstring",
+        "//third-party:typed-builder",
         "//third-party:once_cell",
         "//third-party:owo-colors",
     ],
@@ -20,6 +27,7 @@ rust_test(
     edition = "2021",
     deps = [
         ":utils",
+        "//third-party:pretty_assertions_sorted",
     ],
     visibility = ["PUBLIC"],
 )

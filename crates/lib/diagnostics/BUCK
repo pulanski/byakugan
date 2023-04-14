@@ -1,0 +1,35 @@
+rust_library(
+    name = "diagnostics",
+    srcs = glob(["src/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        "//third-party:anyhow",
+        "//third-party:clap",
+        "//third-party:miette",
+        "//third-party:owo-colors",
+        "//third-party:smartstring",
+        "//third-party:smol_str",
+        "//third-party:thiserror",
+    ],
+    env = {
+        "CARGO_MANIFEST_DIR": ".",
+        "CARGO_PKG_DESCRIPTION": "A diagnostics library for Byakugan",
+        "CARGO_PKG_NAME": "byakugan",
+        "CARGO_PKG_VERSION": "0.1.0",
+        "CARGO_PKG_VERSION_MAJOR": "0",
+        "CARGO_PKG_VERSION_MINOR": "1",
+        "CARGO_PKG_VERSION_PATCH": "0",
+    },
+    visibility = ["PUBLIC"],
+)
+
+# rust_test(
+#     name = "diagnostics_test",
+#     srcs = glob(["tests/**/*.rs"]),
+#     edition = "2021",
+#     deps = [
+#         ":diagnostics",
+#         "//third-party:pretty_assertions_sorted",
+#     ],
+#     visibility = ["PUBLIC"],
+# )

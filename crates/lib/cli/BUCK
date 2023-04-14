@@ -8,6 +8,7 @@ rust_library(
         "//third-party:clap",
         "//third-party:derive_more",
         "//third-party:getset",
+        "//third-party:smartstring",
     ],
     visibility = ["PUBLIC"],
 )
