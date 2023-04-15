@@ -74,6 +74,7 @@ impl Byakugan {
         tracing::info!("Build system detected: {build_system}");
 
         // Ensure that the build system is executable (i.e. it exists in the PATH)
+        build_tools::ensure_build_system_executable(build_system)?;
 
         // Use the build system to validate that the targets are valid (i.e. they all
         // exist) and determine the task to invoke in watch mode.
@@ -91,7 +92,7 @@ impl Byakugan {
                     build_system,
                     args.targets()
                 );
-                watch::watch(build::ctx(args))?;
+                // watch::watch(build::ctx(args))?;
             }
             Command::Run(run) => {
                 tracing::info!(

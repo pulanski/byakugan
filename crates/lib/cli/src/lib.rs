@@ -75,7 +75,7 @@ pub struct Build {
     /// The targets to build (e.g. `//backend/go/web-server:web-server` or
     /// `//...`)
     #[arg(required = true)]
-    targets: Vec<String>,
+    pub targets: Vec<String>,
 }
 
 #[derive(Args, Debug, Default, Display, Clone, PartialEq, Eq, Hash, Getters)]
@@ -84,7 +84,7 @@ pub struct Build {
 pub struct Run {
     /// The target to run (e.g. `//backend/go/web-server:web-server`)
     #[arg(required = true)]
-    target: String,
+    pub target: String,
 }
 
 #[derive(Args, Debug, Default, Display, Clone, PartialEq, Eq, Hash, Getters)]
@@ -94,7 +94,7 @@ pub struct Test {
     /// The targets to test (e.g. `//backend/go/web-server:web-server` or
     /// `//...`)
     #[arg(required = true)]
-    targets: Vec<String>,
+    pub targets: Vec<String>,
 }
 
 // /// Duration of debounce (in milliseconds) for file system events

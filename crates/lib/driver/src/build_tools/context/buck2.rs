@@ -11,7 +11,6 @@ pub mod query {
     /// # Returns
     ///
     /// A list of all build targets in the current workspace/cell.
-    #[tracing::instrument(name = "buck2 query //...")]
     pub fn all_targets() -> Result<Vec<String>> {
         // pub async fn all_targets() -> Result<Vec<String>> { // TODO: in the future,
         // make async TODO: in the future, convert this to a Result<Vec<Target>>
@@ -46,4 +45,9 @@ pub mod query {
 
         Ok(targets)
     }
+}
+
+pub fn is_installed() -> bool {
+    std::process::Command::new("buck2").arg("--version").output().is_ok() ||
+        std::process::Command::new("buck").arg("--version").output().is_ok()
 }

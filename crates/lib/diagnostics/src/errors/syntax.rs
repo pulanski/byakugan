@@ -39,14 +39,54 @@ pub enum SyntaxError {
         )
     )]
     InvalidRepoName {
-        /// The **label** (e.g. `@my_repo//:target`) that was being parsed.
+        /// The canonical command (e.g. `bkg build
+        /// @invalid∈_repo∈_name∈:target`) containing the invalid repo name
+        /// (`@invalid∈_repo∈_name∈:target`) that was being parsed.
         #[source_code]
-        label: String,
+        cmd:  String,
         /// The repo name that was not found (e.g. `@invalid∈_repo∈_name∈`).
-        repo:  SmolStr,
+        repo: SmolStr,
         /// The span of the target within the command line input.
         #[label("Invalid repo name")]
-        span:  SourceSpan,
+        span: SourceSpan,
+    },
+
+    /// Returned when the **package name** specified by the user within a
+    /// **label** for a target is _invalid_. To resolve this error, the user
+    /// should check that the package name is valid and does not contain any
+    /// invalid characters and adheres to the following format:
+    /// `//<package_name>` (e.g. `//foo/bar`) where `<package_name>` ∈
+    /// `//([\\w\\-][\\w\\-.~]*)?`.
+    #[error(
+        "{} {} {}{} {}",
+        SYNTAX_ERROR_PREFIX.blue(),
+        "-".black(),
+        "Invalid package name: ".red(),
+        ":".black(),
+        .pkg.yellow().italic()
+    )]
+    #[diagnostic(
+        code(byakugan::syntax::invalid_package_name),
+        url(docsrs),
+        help(
+            "The package name you have specified is syntactically invalid. Please check that the \
+             package name is valid and does not contain any invalid characters, adhering to the \
+             following format: `//<package_name>` (e.g. `//foo/bar`) where `<package_name>` ∈ \
+             //([\\w\\-][\\w\\-.~]*)?"
+        )
+    )]
+    InvalidPkgName {
+        /// The canonical command (e.g. `bkg build
+        /// invalid∈_package∈_name∈:target`) containing the invalid package
+        /// name (`//invalid∈_package∈_name∈:target`) that was being parsed.
+        #[source_code]
+        cmd:  String,
+        /// The package name that was not found (e.g.
+        /// `//invalid∈_package∈_name∈`).
+        pkg:  SmolStr,
+        /// The span of the target within the command line input.
+        #[label("Invalid package name")]
+        span: SourceSpan,
     },
 
     /// Returned when the **target name** specified by the user within a

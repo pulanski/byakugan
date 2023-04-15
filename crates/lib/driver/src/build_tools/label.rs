@@ -56,14 +56,64 @@ impl Repo {
     pub fn parse(label: &str, repo: &str) -> Result<Repo> {
         if !LABEL_REPO_RE.is_match(repo) || !label.contains(repo) {
             return Err(SyntaxError::InvalidRepoName {
-                label: label.into(),
-                repo:  repo.into(),
-                span:  SourceSpan::new(0.into(), repo.len().into()),
+                cmd:  label.into(),
+                repo: repo.into(),
+                span: SourceSpan::new(0.into(), repo.len().into()),
             })
             .into_diagnostic();
         }
 
         Ok(Repo(repo.into()))
+    }
+}
+
+/// Represents a **package** (e.g. `//foo/bar`, `//foo/bar/baz`). Packages
+/// are used to group related **targets** together. A **package** is identified
+/// by a name, which must be a _valid package name_ for a label (i.e. it must
+/// start with a `//` and contain only alphanumeric characters, underscores, and
+/// slashes).
+#[derive(
+    Debug,
+    Default,
+    Display,
+    Clone,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    From,
+    Into,
+    FromStr,
+    Shrinkwrap,
+)]
+pub struct Pkg(String);
+
+impl Pkg {
+    pub fn new(cmd: &str, pkg: &str) -> Result<Pkg> {
+        // let command = Command::parse(cmd)?;
+        //
+        // let label = Label::extract_from(&command)?;
+
+        let label = "@foo//bar:baz";
+
+        // TODO: extract the label from the command (e.g. `bkg build //foo/bar:baz` ->
+        // `//foo/bar:baz`)
+        Self::parse(cmd, label, pkg)
+    }
+
+    pub fn parse(cmd: &str, label: &str, pkg: &str) -> Result<Pkg> {
+        if !LABEL_REPO_RE.is_match(pkg) || !label.contains(pkg) {
+            // TODO: properly get the span of the package name in the raw command text
+            return Err(SyntaxError::InvalidPkgName {
+                cmd:  cmd.into(),
+                pkg:  pkg.into(),
+                span: SourceSpan::new(0.into(), pkg.len().into()),
+            })
+            .into_diagnostic();
+        }
+
+        Ok(Pkg(pkg.into()))
     }
 }
 
@@ -217,5 +267,11 @@ impl Label {
         //     name,
         //     relative: repo.is_empty() && pkg.is_empty(),
         // })
+    }
+}
+
+impl From<&str> for Label {
+    fn from(s: &str) -> Self {
+        Label::parse(s).expect("failed to parse label")
     }
 }

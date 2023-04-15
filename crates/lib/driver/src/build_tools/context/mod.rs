@@ -11,14 +11,35 @@ use std::{
 };
 
 use super::label::Label;
+use cli::{
+    Build,
+    Run,
+    Test,
+};
+use derivative::Derivative;
 use derive_more::Display;
-use diagnostics::errors::CliError::NoBuildSystemDetected;
+use diagnostics::errors::{
+    CliError::{
+        self,
+        NoBuildSystemDetected,
+    },
+    ToolchainError,
+};
+use getset::{
+    Getters,
+    MutGetters,
+    Setters,
+};
 use miette::{
     IntoDiagnostic,
+    Report,
     Result,
+    SourceSpan,
 };
 use owo_colors::OwoColorize;
+use shrinkwraprs::Shrinkwrap;
 use smartstring::alias::String;
+use typed_builder::TypedBuilder;
 
 fn buck2() -> String {
     "buck2".bright_yellow().bold().to_string().into()
@@ -57,7 +78,7 @@ struct BuildContext {
     /// The **targets** that are being built by the build command (e.g.
     /// `@fbcode//foo/bar:baz` in `buck2 build @fbcode//foo/bar:baz` or
     /// `...` in `bazel build ...`)
-    pub targets: Vec<Target>,
+    pub targets: TargetSet,
 
     /// The **build system** used to execute the build command (e.g. `buck2`,
     /// `bazel`, `cargo`, etc.).
@@ -70,6 +91,87 @@ struct BuildContext {
     pub system: BuildSystem,
 }
 
+#[derive(
+    Debug,
+    Clone,
+    PartialEq,
+    Eq,
+    Hash,
+    Getters,
+    MutGetters,
+    Setters,
+    TypedBuilder,
+    Derivative,
+    Shrinkwrap,
+)]
+#[derivative(Default(new = "true"))]
+#[getset(get = "pub", get_mut = "pub", set = "pub")]
+#[shrinkwrap(mutable)]
+struct TargetSet {
+    targets: Vec<Target>,
+}
+
+// impl display
+impl std::fmt::Display for TargetSet {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let targets = self
+            .targets
+            .iter()
+            .map(|target| target.label().to_string())
+            .collect::<Vec<_>>()
+            .join(", ");
+        write!(f, "{targets}")
+    }
+}
+
+impl TargetSet {
+    /// Get the **target** that matches the specified **label** from the
+    /// **target set**. If no target is found, an error is returned
+    /// (indicating that the target was not found within the dependency graph of
+    /// the build system).
+    ///
+    /// # Arguments
+    ///
+    /// * `cmd` - The canonical command executed by the user (e.g. `buck2 build
+    ///  @fbcode//foo/bar:baz` or `bazel build @fbcode//foo/bar:baz`). This is
+    /// used to generate a helpful error message if the target is not found.
+    ///
+    /// * `label` - The label of the target to get from the target set.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(&Target)` - The target that matches the specified label.
+    ///
+    /// * `Err(Report)` - An error indicating that the target was not found
+    /// within the dependency graph of the build system.
+    pub fn get_target(&self, cmd: &str, label: &Label) -> Result<&Target> {
+        // TODO: in the future, calculate the span of the label in the command correctly
+        self.targets.iter().find(|target| target.label() == label).ok_or_else(|| {
+            Report::new(CliError::TargetNotFound {
+                command: cmd.to_string(),
+                target:  label.to_string().into(),
+                span:    SourceSpan::new(0.into(), label.to_string().len().into()),
+            })
+        })
+    }
+}
+
+impl From<Vec<String>> for TargetSet {
+    fn from(targets: Vec<String>) -> Self {
+        Self {
+            targets: targets
+                .into_iter()
+                .map(|target| {
+                    Target::builder()
+                        .label(Label::from(target.as_str()))
+                        .rule(Rule::default())
+                        .build()
+                })
+                .collect(),
+        }
+    }
+}
+
 /// A **build target**. A build target is a label that identifies a **build
 /// target** in the context of a **build system**. A build target is composed of
 /// a **label** (e.g. `@fbcode//foo/bar:baz`) and a **rule** (e.g.
@@ -80,11 +182,18 @@ struct BuildContext {
 /// etc.), however in the future targets may be made more generic to support
 /// other build systems (e.g. **Cargo**, **Make**, **Ninja**, etc.), or another
 /// abstraction may be used to represent build targets in a more generic way.
+#[derive(Debug, Clone, PartialEq, Eq, Hash, Getters, MutGetters, Setters, TypedBuilder)]
+#[getset(get = "pub", get_mut = "pub", set = "pub")]
 struct Target {
     label: Label,
     rule:  Rule,
 }
 
+#[derive(
+    Debug, Clone, PartialEq, Eq, Hash, Getters, MutGetters, Setters, TypedBuilder, Derivative,
+)]
+#[derivative(Default(new = "true"))]
+#[getset(get = "pub", get_mut = "pub", set = "pub")]
 struct Rule {
     // ...
 }
@@ -169,8 +278,7 @@ pub mod build {
 }
 
 /// Validate that the targets specified by the user are valid for the given
-/// build system. If the targets are valid, return `Ok(true)`, otherwise return
-/// `Ok(false)`. If an error occurs, return `Err`.
+/// build system. If the targets are not valid, an error is returned.
 ///
 /// **NOTE**: This is a temporary solution to validate targets for both Buck(2)
 /// and Bazel. In the future, this will be replaced by a more generic solution
@@ -183,6 +291,28 @@ pub(crate) fn validate_targets(subcommand: &cli::Command, build_system: BuildSys
 
             // Use `buck2 query` to collect all build targets in the current workspace/cell
             let all_targets = buck2::query::all_targets()?;
+
+            // Check that all targets specified by the user exist within the target list
+            // collected
+            match subcommand {
+                cli::Command::Build(cli::Build { targets }) |
+                cli::Command::Test(cli::Test { targets }) => {
+                    let requested_targets = TargetSet::from(targets.clone());
+                    tracing::debug!("Validating targets: {}", requested_targets);
+                    // for target in targets {
+                    //     if !all_targets.contains(target) {
+                    //         return Err(InvalidTarget { target:
+                    // target.to_string() })
+                    // .into_diagnostic();     }
+                    // }
+                }
+                cli::Command::Run(cli::Run { target }) => {
+                    tracing::debug!("Validating target: {:?}", target);
+                    // if !all_targets.contains(target) {
+                    //     return Err(InvalidTarget { target: target.to_string()
+                    // }).into_diagnostic(); }
+                }
+            }
 
             Ok(())
         }
@@ -197,6 +327,38 @@ pub(crate) fn validate_targets(subcommand: &cli::Command, build_system: BuildSys
             // ...
 
             todo!("Validate targets for Cargo")
+        }
+    }
+}
+
+pub(crate) fn ensure_build_system_executable(build_system: BuildSystem) -> Result<()> {
+    match build_system {
+        BuildSystem::Buck => {
+            // Ensure that `buck2` is installed and available on the `PATH`
+
+            if buck2::is_installed() {
+                Ok(())
+            } else {
+                Err(ToolchainError::Buck2NotFound).into_diagnostic()
+            }
+        }
+        BuildSystem::Bazel => {
+            // Ensure that `bazel` is installed and available on the `PATH`
+
+            if bazel::is_installed() {
+                Ok(())
+            } else {
+                Err(ToolchainError::BazelNotFound).into_diagnostic()
+            }
+        }
+        BuildSystem::Cargo => {
+            // Ensure that `cargo` is installed and available on the `PATH`
+
+            if cargo::is_installed() {
+                Ok(())
+            } else {
+                Err(ToolchainError::CargoNotFound).into_diagnostic()
+            }
         }
     }
 }
