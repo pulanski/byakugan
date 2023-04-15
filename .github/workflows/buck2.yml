@@ -1,0 +1,33 @@
+permissions:
+    contents: read
+on:
+    push:
+        branches: [main]
+    pull_request:
+# Spend CI time only on latest ref: https://github.com/jonhoo/rust-ci-conf/pull/5
+concurrency:
+    group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+name: buck2
+
+env:
+  RUST_TOOLCHAIN: nightly-2023-01-24
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Rust ${{ env.RUST_TOOLCHAIN }}
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
+          override: true
+
+      - name: Install Buck2 via Cargo
+        run: cargo +${{ env.RUST_TOOLCHAIN }} install --git https://github.com/facebook/buck2.git buck2
+
+      - name: Build with Buck2
+        run: buck2 build ...
+
+      - name: Test with Buck2
+        run: buck2 test ...
