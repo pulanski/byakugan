@@ -13,6 +13,7 @@ rust_library(
         "//third-party:getset",
         "//third-party:lazy_static",
         "//third-party:miette",
+        "//third-party:owo-colors",
         "//third-party:regex",
         "//third-party:shrinkwraprs",
         "//third-party:smartstring",

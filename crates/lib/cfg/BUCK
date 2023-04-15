@@ -6,6 +6,7 @@ rust_library(
         "//third-party:clap",
         "//third-party:derive_more",
         "//third-party:log",
+        "//third-party:owo-colors",
         "//third-party:strum_macros",
     ],
     env = {

@@ -17,6 +17,7 @@ derive_more = { workspace = true }
 getset = { workspace = true }
 lazy_static = { workspace = true }
 miette = { workspace = true }
+owo-colors = { workspace = true }
 pretty_assertions_sorted = { workspace = true }
 regex = { workspace = true }
 shrinkwraprs = { workspace = true }

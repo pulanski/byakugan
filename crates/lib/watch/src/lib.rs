@@ -6,6 +6,7 @@ use notify::*;
 // use notify_debouncer_mini::{new_debouncer, notify::*, DebounceEventResult};
 // use smartstring::alias::String;
 use bytes::BytesMut;
+use notify_debouncer_mini::DebounceEventResult;
 use std::time::Duration;
 
 /// A **task** that can be _executed_ and _monitored/manipulated_ by Byakugan.
@@ -37,6 +38,8 @@ pub trait Task: std::fmt::Debug + std::fmt::Display + Send + Sync + DynClone + D
 }
 
 dyn_clone::clone_trait_object!(Task);
+
+pub type ModifyEvent = DebounceEventResult;
 
 pub fn watch(command: Command) -> Result<()> {
     let (tx, rx) = std::sync::mpsc::channel();

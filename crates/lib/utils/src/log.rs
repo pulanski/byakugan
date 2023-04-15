@@ -18,6 +18,7 @@ pub fn init(verbosity: &LogLevel) -> Result<()> {
             LogLevel::Error => Level::ERROR,
             LogLevel::Fatal => Level::ERROR,
         })
+        .without_time()
         .finish();
     tracing::subscriber::set_global_default(subscriber)
         .into_diagnostic()

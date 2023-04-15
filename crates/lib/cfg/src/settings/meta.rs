@@ -1,3 +1,9 @@
+use owo_colors::OwoColorize;
+
+pub fn byakugan() -> String {
+    "byakugan".bright_red().bold().to_string()
+}
+
 /// The **name** of the executable from the command-line.
 pub const EXE_NAME: &str = env!("CARGO_PKG_NAME");
 

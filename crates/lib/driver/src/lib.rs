@@ -1,7 +1,8 @@
 pub mod build_tools;
-use build_tools::context::{build, detect_build_system};
+use build_tools::context::build;
 use clap::Parser;
 
+use cfg::settings::byakugan;
 use cli::{ByakuganCli, Command};
 use derive_more::Display;
 use getset::{Getters, MutGetters, Setters};
@@ -49,22 +50,31 @@ impl Byakugan {
     /// indicating the success or failure of the program.
     pub fn run() -> Result<ExitCode> {
         // parse the command line arguments
-        let cli = ByakuganCli::parse();
+        let command = ByakuganCli::parse();
+        tracing::debug!("Canonical command issued: {}", command);
         // let state = Self::new(cli); // TODO: construct state from cli and config file
 
-        log::init(cli.verbosity())?;
-
-        tracing::info!("Canonical command issued: {}", cli);
+        log::init(command.verbosity())?;
+        tracing::info!("{} is running", byakugan());
 
         // Determine the build system to use.
-        let build_system = build_tools::detect_build_system(cli.subcommand().to_string().as_str())?;
-        tracing::info!("Build system detected: {}", build_system);
+        let subcommand = command.subcommand();
+        let build_system = build_tools::detect_build_system(&cli::str(subcommand))?;
+        tracing::info!("Build system detected: {build_system}");
 
-        // Use the build system to validate that the targets are valid (i.e. exist)
-        // and to determine the task to invoke in watch mode.
-        let valid = build_tools::validate_targets(cli.subcommand())?;
+        // Ensure that the build system is executable (i.e. it exists in the PATH)
 
-        match cli.subcommand() {
+
+        // Use the build system to validate that the targets are valid (i.e. they all exist)
+        // and determine the task to invoke in watch mode.
+        build_tools::validate_targets(command.subcommand(), build_system)?;
+
+        // if valid_targets.is_empty() {
+        //     tracing::warn!("No valid targets were found");
+        //     return Ok(ExitCode::SUCCESS);
+        // }
+
+        match command.subcommand() {
             Command::Build(args) => {
                 tracing::info!(
                     "Executing build command for {} given targets {:?}",

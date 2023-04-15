@@ -8,14 +8,30 @@ use std::{
 };
 
 use super::label::Label;
+use derive_more::Display;
 use diagnostics::errors::CliError::NoBuildSystemDetected;
 use miette::{IntoDiagnostic, Result};
-use strum_macros::Display;
+use owo_colors::OwoColorize;
+use smartstring::alias::String;
+
+fn buck2() -> String {
+    "buck2".bright_yellow().bold().to_string().into()
+}
+
+fn bazel() -> String {
+    "bazel".bright_green().bold().to_string().into()
+}
+
+fn cargo() -> String {
+    "cargo".yellow().bold().to_string().into()
+}
 
 /// A **build system** used to _execute a build command_. Used to determine which build system to use
 /// when executing a build command (e.g. `buck2`, `bazel`, `cargo`, etc.).
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Display)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Display)]
+#[display(fmt = "{}")]
 pub enum BuildSystem {
+    #[display(fmt = "{}", "buck2()")]
     Buck,
     Bazel,
     Cargo,
@@ -143,10 +159,7 @@ pub mod build {
 /// **NOTE**: This is a temporary solution to validate targets for both Buck(2) and Bazel.
 /// In the future, this will be replaced by a more generic solution that can be used to validate
 /// targets for any build system.
-pub(crate) fn validate_targets(
-    subcommand: &cli::Command,
-    build_system: BuildSystem,
-) -> Result<bool> {
+pub(crate) fn validate_targets(subcommand: &cli::Command, build_system: BuildSystem) -> Result<()> {
     // Use the detected build system to validate the targets specified by the user
     match build_system {
         BuildSystem::Buck => {
@@ -154,14 +167,19 @@ pub(crate) fn validate_targets(
 
             // Use `buck2 query` to collect all build targets in the current workspace/cell
             let all_targets = buck2::query::all_targets()?;
+
+            Ok(())
         }
         BuildSystem::Bazel => {
             // Validate targets for Bazel
             // ...
+
+            todo!("Validate targets for Bazel")
         }
         BuildSystem::Cargo => {
             // Validate targets for Cargo
             // ...
+
             todo!("Validate targets for Cargo")
         }
     }

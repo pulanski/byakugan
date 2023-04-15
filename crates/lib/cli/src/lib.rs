@@ -1,6 +1,6 @@
 mod flags;
 
-use cfg::settings::{LogLevel, EXE_ABOUT, EXE_AUTHOR, EXE_NAME, EXE_VERSION};
+use cfg::settings::{byakugan, LogLevel, EXE_ABOUT, EXE_AUTHOR, EXE_NAME, EXE_VERSION};
 use clap::{Args, Parser, Subcommand};
 use derive_more::Display;
 use getset::Getters;
@@ -19,7 +19,7 @@ Byakugan is specifically designed to work with Starlark-based build systems like
     bin_name = EXE_NAME,
 )]
 #[getset(get = "pub")]
-#[display(fmt = "{EXE_NAME} {subcommand}")]
+#[display(fmt = "{} {subcommand}", "byakugan()")]
 pub struct ByakuganCli {
     /// The subcommand to execute
     #[clap(subcommand)]
@@ -51,6 +51,14 @@ pub enum Command {
         about = "Test a target in watch-mode (e.g. `buck2 test //backend/go/web-server:web-server` or `bazel test //...`).\nThe test command is re-run automatically when source code changes, with incremental test execution\nbeing performed and displayed in the terminal."
     )]
     Test(Test),
+}
+
+pub fn str(cmd: &Command) -> String {
+    match cmd {
+        Command::Build(cmd) => cmd.to_string().into(),
+        Command::Run(cmd) => cmd.to_string().into(),
+        Command::Test(cmd) => cmd.to_string().into(),
+    }
 }
 
 #[derive(Args, Debug, Default, Display, Clone, PartialEq, Eq, Hash, Getters)]
