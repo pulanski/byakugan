@@ -6,10 +6,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+cfg = { path = "../cfg" }
 utils = { path = "../utils" }
 
 anyhow = { workspace = true }
 clap = { workspace = true }
 derive_more = { workspace = true }
 getset = { workspace = true }
+miette = { workspace = true }
+tracing = { workspace = true }
 smartstring = { workspace = true }

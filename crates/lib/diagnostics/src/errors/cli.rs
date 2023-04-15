@@ -40,4 +40,32 @@ pub enum CliError {
         #[label("Target not found")]
         span: SourceSpan,
     },
+
+    /// Returned when no **build system** can be detected from the current directory or any of its
+    /// parent directories checked recursively up to the root directory. To resolve this error, the
+    /// user should check that they are executing the command from within a valid workspace (e.g.
+    /// a directory containing a `Cargo.toml` file for the `cargo` build system, or analogous
+    /// configuration files for other build systems).
+    #[error(
+        "{} {} {}",
+        CLI_ERROR_PREFIX.blue(),
+        "-".black(),
+        "No build system detected. Please check that you are executing the command from within a valid \
+          workspace (e.g. a directory containing a `Cargo.toml` file for the `cargo` build system, or \
+          analogous configuration files for other build systems)."
+    )]
+    #[diagnostic(
+        code(byakugan::cli::no_build_system_detected),
+        url(docsrs),
+        help(
+            "No build system detected. Please check that you are executing the command from within a valid \
+              workspace (e.g. a directory containing a `Cargo.toml` file for the `cargo` build system, or \
+              analogous configuration files for other build systems)."
+        )
+    )]
+    NoBuildSystemDetected {
+        /// The canonical command that was executed by the user (e.g. `bkg build //:does_not_exist`).
+        #[source_code]
+        command: String,
+    },
 }

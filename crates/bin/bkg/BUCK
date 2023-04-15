@@ -3,10 +3,8 @@ rust_binary(
     srcs = glob(["src/**/*.rs"]),
     edition = "2021",
     deps = [
-        "//third-party:clap",
-        "//crates/lib/cli:cli",
-        "//crates/lib/watch:watch",
-        "//crates/lib/utils:utils",
+        "//third-party:miette",
+        "//crates/lib/driver:driver",
     ],
     visibility = ["PUBLIC"],
 )

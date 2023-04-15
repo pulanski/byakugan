@@ -1,0 +1,29 @@
+rust_library(
+    name = "cfg",
+    srcs = glob(["src/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        "//third-party:clap",
+        "//third-party:derive_more",
+        "//third-party:log",
+        "//third-party:strum_macros",
+    ],
+    env = {
+        "RUST_LOG": "cfg=debug",
+        "CARGO_PKG_VERSION": "0.1.0",
+        "CARGO_PKG_NAME": "bkg",
+        "CARGO_PKG_AUTHORS": "pulanski",
+        "CARGO_PKG_DESCRIPTION": "Tool for file system watching in the context of build systems that allows you to monitor a directory and automatically trigger builds, tests, and other tasks when source code changes.",
+    },
+    visibility = ["PUBLIC"],
+)
+
+# rust_test(
+#     name = "cfg_test",
+#     srcs = glob(["tests/**/*.rs"]),
+#     edition = "2021",
+#     deps = [
+#         ":cfg",
+#     ],
+#     visibility = ["PUBLIC"],
+# )

@@ -1,6 +1,6 @@
-use cli::Byakugan;
+use driver::Byakugan;
+use miette::Result;
 use std::process::ExitCode;
-use utils::Result;
 
 fn main() -> Result<ExitCode> {
     Byakugan::run()

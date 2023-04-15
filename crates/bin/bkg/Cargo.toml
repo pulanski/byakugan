@@ -7,8 +7,8 @@ authors = ["pulanski"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-watch = { path = "../../lib/watch" }
+driver = { path = "../../lib/driver" }
 utils = { path = "../../lib/utils" }
-cli = { path = "../../lib/cli" }
+watch = { path = "../../lib/watch" }
 
-clap = { workspace = true }
+miette = { workspace = true }

@@ -6,16 +6,24 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+cli = { path = "../cli" }
+utils = { path = "../utils" }
+
 anyhow = { workspace = true }
+bytes = { workspace = true }
 derive-new = { workspace = true }
 derive_more = { workspace = true }
 downcast-rs = { workspace = true }
 dyn-clone = { workspace = true }
 getset = { workspace = true }
+miette = { workspace = true }
+notify = { workspace = true }
+notify-debouncer-mini = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 shrinkwraprs = { workspace = true }
 smartstring = { workspace = true }
+tracing = { workspace = true }
 typed-builder = { workspace = true }
 once_cell = { workspace = true }
 owo-colors = { workspace = true }

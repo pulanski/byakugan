@@ -1,3 +1,3 @@
-pub type Result<T> = anyhow::Result<T>;
+pub mod ui;
 
-pub mod label;
+pub mod log;

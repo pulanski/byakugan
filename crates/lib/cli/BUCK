@@ -3,12 +3,15 @@ rust_library(
     srcs = glob(["src/**/*.rs"]),
     edition = "2021",
     deps = [
+        "//crates/lib/cfg:cfg",
         "//crates/lib/utils:utils",
         "//third-party:anyhow",
         "//third-party:clap",
         "//third-party:derive_more",
         "//third-party:getset",
+        "//third-party:miette",
         "//third-party:smartstring",
+        "//third-party:tracing",
     ],
     visibility = ["PUBLIC"],
 )

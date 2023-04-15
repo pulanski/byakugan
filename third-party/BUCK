@@ -2460,6 +2460,46 @@ third_party_rust_library(
 )
 
 alias(
+    name = "dirs-next",
+    actual = ":dirs-next-2.0.0",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "dirs-next-2.0.0",
+    srcs = [
+        "vendor/dirs-next-2.0.0/src/lib.rs",
+        "vendor/dirs-next-2.0.0/src/lin.rs",
+        "vendor/dirs-next-2.0.0/src/mac.rs",
+        "vendor/dirs-next-2.0.0/src/wasm.rs",
+        "vendor/dirs-next-2.0.0/src/win.rs",
+    ],
+    crate = "dirs_next",
+    crate_root = "vendor/dirs-next-2.0.0/src/lib.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":cfg-if-1.0.0",
+        ":dirs-sys-next-0.1.2",
+    ],
+)
+
+third_party_rust_library(
+    name = "dirs-sys-next-0.1.2",
+    srcs = [
+        "vendor/dirs-sys-next-0.1.2/src/lib.rs",
+        "vendor/dirs-sys-next-0.1.2/src/xdg_user_dirs.rs",
+    ],
+    crate = "dirs_sys_next",
+    crate_root = "vendor/dirs-sys-next-0.1.2/src/lib.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [":libc"],
+)
+
+alias(
     name = "dissimilar",
     actual = ":dissimilar-1.0.6",
     visibility = ["PUBLIC"],
@@ -2831,6 +2871,56 @@ third_party_rust_library(
     ],
 )
 
+alias(
+    name = "fern",
+    actual = ":fern-0.6.2",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "fern-0.6.2",
+    srcs = [
+        "vendor/fern-0.6.2/src/builders.rs",
+        "vendor/fern-0.6.2/src/colors.rs",
+        "vendor/fern-0.6.2/src/errors.rs",
+        "vendor/fern-0.6.2/src/lib.rs",
+        "vendor/fern-0.6.2/src/log_impl.rs",
+        "vendor/fern-0.6.2/src/meta.rs",
+        "vendor/fern-0.6.2/src/syslog.rs",
+    ],
+    crate = "fern",
+    crate_root = "vendor/fern-0.6.2/src/lib.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [":log-0.4.17"],
+)
+
+third_party_rust_library(
+    name = "filetime-0.2.21",
+    srcs = [
+        "vendor/filetime-0.2.21/src/lib.rs",
+        "vendor/filetime-0.2.21/src/redox.rs",
+        "vendor/filetime-0.2.21/src/unix/android.rs",
+        "vendor/filetime-0.2.21/src/unix/linux.rs",
+        "vendor/filetime-0.2.21/src/unix/macos.rs",
+        "vendor/filetime-0.2.21/src/unix/mod.rs",
+        "vendor/filetime-0.2.21/src/unix/utimensat.rs",
+        "vendor/filetime-0.2.21/src/unix/utimes.rs",
+        "vendor/filetime-0.2.21/src/wasm.rs",
+        "vendor/filetime-0.2.21/src/windows.rs",
+    ],
+    crate = "filetime",
+    crate_root = "vendor/filetime-0.2.21/src/lib.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":cfg-if-1.0.0",
+        ":libc",
+    ],
+)
+
 third_party_rust_library(
     name = "fixedbitset-0.2.0",
     srcs = [
@@ -2949,6 +3039,27 @@ third_party_rust_library(
     rustc_flags = ["--cap-lints=allow"],
     visibility = [],
     deps = [":percent-encoding-2.2.0"],
+)
+
+alias(
+    name = "fsevent-sys",
+    actual = ":fsevent-sys-4.1.0",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "fsevent-sys-4.1.0",
+    srcs = [
+        "vendor/fsevent-sys-4.1.0/src/core_foundation.rs",
+        "vendor/fsevent-sys-4.1.0/src/fsevent.rs",
+        "vendor/fsevent-sys-4.1.0/src/lib.rs",
+    ],
+    crate = "fsevent_sys",
+    crate_root = "vendor/fsevent-sys-4.1.0/src/lib.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [":libc-0.2.141"],
 )
 
 third_party_rust_library(
@@ -3824,6 +3935,26 @@ third_party_rust_library(
     ],
     rustc_flags = ["--cap-lints=allow"],
     visibility = [],
+)
+
+third_party_rust_library(
+    name = "heck-0.3.3",
+    srcs = [
+        "vendor/heck-0.3.3/src/camel.rs",
+        "vendor/heck-0.3.3/src/kebab.rs",
+        "vendor/heck-0.3.3/src/lib.rs",
+        "vendor/heck-0.3.3/src/mixed.rs",
+        "vendor/heck-0.3.3/src/shouty_kebab.rs",
+        "vendor/heck-0.3.3/src/shouty_snake.rs",
+        "vendor/heck-0.3.3/src/snake.rs",
+        "vendor/heck-0.3.3/src/title.rs",
+    ],
+    crate = "heck",
+    crate_root = "vendor/heck-0.3.3/src/lib.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [":unicode-segmentation-1.10.1"],
 )
 
 third_party_rust_library(
@@ -5878,6 +6009,72 @@ third_party_rust_library(
     deps = [
         ":memchr-2.5.0",
         ":minimal-lexical-0.2.1",
+    ],
+)
+
+alias(
+    name = "notify",
+    actual = ":notify-5.1.0",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "notify-5.1.0",
+    srcs = [
+        "vendor/notify-5.1.0/src/config.rs",
+        "vendor/notify-5.1.0/src/error.rs",
+        "vendor/notify-5.1.0/src/event.rs",
+        "vendor/notify-5.1.0/src/fsevent.rs",
+        "vendor/notify-5.1.0/src/inotify.rs",
+        "vendor/notify-5.1.0/src/kqueue.rs",
+        "vendor/notify-5.1.0/src/lib.rs",
+        "vendor/notify-5.1.0/src/null.rs",
+        "vendor/notify-5.1.0/src/poll.rs",
+        "vendor/notify-5.1.0/src/windows.rs",
+    ],
+    crate = "notify",
+    crate_root = "vendor/notify-5.1.0/src/lib.rs",
+    edition = "2021",
+    features = [
+        "crossbeam-channel",
+        "default",
+        "fsevent-sys",
+        "macos_fsevent",
+    ],
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":bitflags-1.3.2",
+        ":crossbeam-channel-0.5.7",
+        ":filetime-0.2.21",
+        ":libc-0.2.141",
+        ":walkdir-2.3.3",
+        "//third-party:fsevent-sys",
+    ],
+)
+
+alias(
+    name = "notify-debouncer-mini",
+    actual = ":notify-debouncer-mini-0.2.1",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "notify-debouncer-mini-0.2.1",
+    srcs = ["vendor/notify-debouncer-mini-0.2.1/src/lib.rs"],
+    crate = "notify_debouncer_mini",
+    crate_root = "vendor/notify-debouncer-mini-0.2.1/src/lib.rs",
+    edition = "2021",
+    features = [
+        "crossbeam",
+        "crossbeam-channel",
+        "default",
+    ],
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":crossbeam-channel-0.5.7",
+        ":notify-5.1.0",
     ],
 )
 
@@ -8857,6 +9054,49 @@ third_party_rust_library(
 )
 
 alias(
+    name = "strum_macros",
+    actual = ":strum_macros-0.19.4",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "strum_macros-0.19.4",
+    srcs = [
+        "vendor/strum_macros-0.19.4/src/helpers/case_style.rs",
+        "vendor/strum_macros-0.19.4/src/helpers/has_metadata.rs",
+        "vendor/strum_macros-0.19.4/src/helpers/meta_helpers.rs",
+        "vendor/strum_macros-0.19.4/src/helpers/mod.rs",
+        "vendor/strum_macros-0.19.4/src/helpers/type_props.rs",
+        "vendor/strum_macros-0.19.4/src/helpers/variant_props.rs",
+        "vendor/strum_macros-0.19.4/src/lib.rs",
+        "vendor/strum_macros-0.19.4/src/macros/enum_count.rs",
+        "vendor/strum_macros-0.19.4/src/macros/enum_discriminants.rs",
+        "vendor/strum_macros-0.19.4/src/macros/enum_iter.rs",
+        "vendor/strum_macros-0.19.4/src/macros/enum_messages.rs",
+        "vendor/strum_macros-0.19.4/src/macros/enum_properties.rs",
+        "vendor/strum_macros-0.19.4/src/macros/enum_variant_names.rs",
+        "vendor/strum_macros-0.19.4/src/macros/mod.rs",
+        "vendor/strum_macros-0.19.4/src/macros/strings/as_ref_str.rs",
+        "vendor/strum_macros-0.19.4/src/macros/strings/display.rs",
+        "vendor/strum_macros-0.19.4/src/macros/strings/from_string.rs",
+        "vendor/strum_macros-0.19.4/src/macros/strings/mod.rs",
+        "vendor/strum_macros-0.19.4/src/macros/strings/to_string.rs",
+    ],
+    crate = "strum_macros",
+    crate_root = "vendor/strum_macros-0.19.4/src/lib.rs",
+    edition = "2018",
+    proc_macro = True,
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":heck-0.3.3",
+        ":proc-macro2-1.0.56",
+        ":quote-1.0.26",
+        ":syn-1.0.109",
+    ],
+)
+
+alias(
     name = "symlink",
     actual = ":symlink-0.1.0",
     visibility = ["PUBLIC"],
@@ -11143,6 +11383,7 @@ third_party_rust_library(
         "in6addr",
         "inaddr",
         "ioapiset",
+        "knownfolders",
         "minwinbase",
         "minwindef",
         "mstcpip",
@@ -11150,6 +11391,7 @@ third_party_rust_library(
         "namedpipeapi",
         "ntdef",
         "ntsecapi",
+        "objbase",
         "processenv",
         "profileapi",
         "shlobj",
@@ -11596,6 +11838,7 @@ rust_binary(
         "in6addr",
         "inaddr",
         "ioapiset",
+        "knownfolders",
         "minwinbase",
         "minwindef",
         "mstcpip",
@@ -11603,6 +11846,7 @@ rust_binary(
         "namedpipeapi",
         "ntdef",
         "ntsecapi",
+        "objbase",
         "processenv",
         "profileapi",
         "shlobj",
@@ -11641,6 +11885,7 @@ buildscript_args(
         "in6addr",
         "inaddr",
         "ioapiset",
+        "knownfolders",
         "minwinbase",
         "minwindef",
         "mstcpip",
@@ -11648,6 +11893,7 @@ buildscript_args(
         "namedpipeapi",
         "ntdef",
         "ntsecapi",
+        "objbase",
         "processenv",
         "profileapi",
         "shlobj",
