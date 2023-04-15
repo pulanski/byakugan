@@ -1,13 +1,24 @@
 mod flags;
 
-use cfg::settings::{byakugan, LogLevel, EXE_ABOUT, EXE_AUTHOR, EXE_NAME, EXE_VERSION};
-use clap::{Args, Parser, Subcommand};
+use cfg::settings::{
+    byakugan,
+    LogLevel,
+    EXE_ABOUT,
+    EXE_AUTHOR,
+    EXE_NAME,
+    EXE_VERSION,
+};
+use clap::{
+    Args,
+    Parser,
+    Subcommand,
+};
 use derive_more::Display;
 use getset::Getters;
 use smartstring::alias::String;
 
-/// **Command line interface** for **Byakugan**, a Rust-based file system watcher
-/// written for Starlark-based build systems.
+/// **Command line interface** for **Byakugan**, a Rust-based file system
+/// watcher written for Starlark-based build systems.
 #[derive(Parser, Debug, Display, Getters, PartialEq, Eq, Hash)]
 #[command(
     author = EXE_AUTHOR,
@@ -27,29 +38,25 @@ pub struct ByakuganCli {
 
     /// The verbosity level to use for logging
     /// [default: info]
-    #[clap(
-        short = 'v',
-        long,
-        required = false,
-        value_enum,
-        default_value = "info"
-    )]
+    #[clap(short = 'v', long, required = false, value_enum, default_value = "info")]
     pub verbosity: LogLevel,
 }
 
 #[derive(Subcommand, Debug, Display, Clone, PartialEq, Eq, Hash)]
 pub enum Command {
-    #[clap(
-        about = "Build a target in watch-mode (e.g. `buck2 build //backend/go/web-server:web-server` or `bazel build //...`).\nThe build command is re-run automatically when source code changes."
-    )]
+    #[clap(about = "Build a target in watch-mode (e.g. `buck2 build \
+                    //backend/go/web-server:web-server` or `bazel build //...`).\nThe build \
+                    command is re-run automatically when source code changes.")]
     Build(Build),
-    #[clap(
-        about = "Run a target in watch-mode (e.g. `buck2 run //backend/go/web-server:web-server` or `bazel run //...`).\nThe run command is re-run automatically when source code changes and the process is automatically restarted."
-    )]
+    #[clap(about = "Run a target in watch-mode (e.g. `buck2 run \
+                    //backend/go/web-server:web-server` or `bazel run //...`).\nThe run command \
+                    is re-run automatically when source code changes and the process is \
+                    automatically restarted.")]
     Run(Run),
-    #[clap(
-        about = "Test a target in watch-mode (e.g. `buck2 test //backend/go/web-server:web-server` or `bazel test //...`).\nThe test command is re-run automatically when source code changes, with incremental test execution\nbeing performed and displayed in the terminal."
-    )]
+    #[clap(about = "Test a target in watch-mode (e.g. `buck2 test \
+                    //backend/go/web-server:web-server` or `bazel test //...`).\nThe test \
+                    command is re-run automatically when source code changes, with incremental \
+                    test execution\nbeing performed and displayed in the terminal.")]
     Test(Test),
 }
 
@@ -65,7 +72,8 @@ pub fn str(cmd: &Command) -> String {
 #[getset(get = "pub")]
 #[display(fmt = "build {}", "targets.join(\" \")")]
 pub struct Build {
-    /// The targets to build (e.g. `//backend/go/web-server:web-server` or `//...`)
+    /// The targets to build (e.g. `//backend/go/web-server:web-server` or
+    /// `//...`)
     #[arg(required = true)]
     targets: Vec<String>,
 }
@@ -83,7 +91,8 @@ pub struct Run {
 #[getset(get = "pub")]
 #[display(fmt = "test {}", "targets.join(\" \")")]
 pub struct Test {
-    /// The targets to test (e.g. `//backend/go/web-server:web-server` or `//...`)
+    /// The targets to test (e.g. `//backend/go/web-server:web-server` or
+    /// `//...`)
     #[arg(required = true)]
     targets: Vec<String>,
 }

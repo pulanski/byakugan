@@ -118,7 +118,7 @@ impl From<LogLevel> for log::Level {
     // ValueEnum,
     Hash,
     IsVariant,
-    // EnumIter,
+    /* EnumIter, */
 )]
 pub enum Topic {
     /// A log message that is associated with the **`Lexer`**.

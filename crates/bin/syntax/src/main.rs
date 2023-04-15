@@ -1,4 +1,7 @@
-use rand::{Rng, SeedableRng};
+use rand::{
+    Rng,
+    SeedableRng,
+};
 
 fn main() {
     // generate random path of given length
@@ -9,9 +12,7 @@ fn main() {
             let dir_len = rng.gen_range(0..10);
 
             // generate random directory name given length
-            let dir: String = (0..dir_len)
-                .map(|_| rng.gen_range(b'a'..=b'z') as char)
-                .collect();
+            let dir: String = (0..dir_len).map(|_| rng.gen_range(b'a'..=b'z') as char).collect();
 
             path.push_str(&format!("{dir}/"));
         }
@@ -44,7 +45,8 @@ fn main() {
         println!("color_num: {color_num}");
         let color = format!("\u{001B}[38;5;{}m", rng.gen_range(16..256)); // Generate random 8-bit color
         if !color_sequence.contains(&color) {
-            color_sequence.push(color); // Push a clone of the string onto the vector
+            color_sequence.push(color); // Push a clone of the string onto the
+                                        // vector
         }
     }
 
@@ -60,19 +62,13 @@ fn main() {
 
         let depth = i;
         let reset_color = RESET_COLOR.to_string();
-        let color = color_sequence
-            .get(depth % color_sequence.len())
-            .unwrap_or(&reset_color);
+        let color = color_sequence.get(depth % color_sequence.len()).unwrap_or(&reset_color);
 
         print!("{color}{component}{RESET_COLOR}");
 
         if i < components.len() - 1 {
             // Add colored slash after directory components
-            print!(
-                "{}/{}",
-                color_sequence[depth % color_sequence.len()],
-                RESET_COLOR
-            );
+            print!("{}/{}", color_sequence[depth % color_sequence.len()], RESET_COLOR);
         }
     }
 }
@@ -132,9 +128,9 @@ fn main() {
 //     let version = if let Some(ver) = vers.set_ver.as_deref() {
 //         ver.to_string()
 //     } else {
-//         // Increment the one requested (in a real program, we'd reset the lower numbers)
-//         let (maj, min, pat) = (vers.major, vers.minor, vers.patch);
-//         match (maj, min, pat) {
+//         // Increment the one requested (in a real program, we'd reset the
+// lower numbers)         let (maj, min, pat) = (vers.major, vers.minor,
+// vers.patch);         match (maj, min, pat) {
 //             (true, _, _) => major += 1,
 //             (_, true, _) => minor += 1,
 //             (_, _, true) => patch += 1,

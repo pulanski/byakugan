@@ -3,7 +3,12 @@ use std::fmt;
 use cfg::settings::LogLevel;
 use derivative::Derivative;
 use diagnostics::errors::LogError;
-use miette::{Diagnostic, IntoDiagnostic, ReportHandler, Result};
+use miette::{
+    Diagnostic,
+    IntoDiagnostic,
+    ReportHandler,
+    Result,
+};
 use tracing::Level;
 use tracing_subscriber::FmtSubscriber;
 

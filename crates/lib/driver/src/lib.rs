@@ -3,12 +3,22 @@ use build_tools::context::build;
 use clap::Parser;
 
 use cfg::settings::byakugan;
-use cli::{ByakuganCli, Command};
+use cli::{
+    ByakuganCli,
+    Command,
+};
 use derive_more::Display;
-use getset::{Getters, MutGetters, Setters};
+use getset::{
+    Getters,
+    MutGetters,
+    Setters,
+};
 use miette::Result;
 use shrinkwraprs::Shrinkwrap;
-use std::{process::ExitCode, time::Duration};
+use std::{
+    process::ExitCode,
+    time::Duration,
+};
 use typed_builder::TypedBuilder;
 use utils::log;
 use watch::Task;
@@ -38,7 +48,8 @@ impl Byakugan {
     /// the command line arguments or the configuration file.
     pub fn new(cli: ByakuganCli) -> Self {
         todo!()
-        // let debounce_duration = Duration::from_millis(cli.debounce_duration());
+        // let debounce_duration =
+        // Duration::from_millis(cli.debounce_duration());
 
         // Self {
         //     debounce_duration,
@@ -46,8 +57,8 @@ impl Byakugan {
         // }
     }
 
-    /// Runs the **top level entry point** for **Byakugan** and returns an `ExitCode`
-    /// indicating the success or failure of the program.
+    /// Runs the **top level entry point** for **Byakugan** and returns an
+    /// `ExitCode` indicating the success or failure of the program.
     pub fn run() -> Result<ExitCode> {
         // parse the command line arguments
         let command = ByakuganCli::parse();
@@ -64,9 +75,8 @@ impl Byakugan {
 
         // Ensure that the build system is executable (i.e. it exists in the PATH)
 
-
-        // Use the build system to validate that the targets are valid (i.e. they all exist)
-        // and determine the task to invoke in watch mode.
+        // Use the build system to validate that the targets are valid (i.e. they all
+        // exist) and determine the task to invoke in watch mode.
         build_tools::validate_targets(command.subcommand(), build_system)?;
 
         // if valid_targets.is_empty() {

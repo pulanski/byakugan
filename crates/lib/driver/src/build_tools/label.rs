@@ -1,8 +1,21 @@
-use derive_more::{Display, From, FromStr, Into};
+use derive_more::{
+    Display,
+    From,
+    FromStr,
+    Into,
+};
 use diagnostics::errors::syntax::SyntaxError;
-use getset::{Getters, MutGetters, Setters};
+use getset::{
+    Getters,
+    MutGetters,
+    Setters,
+};
 use lazy_static::lazy_static;
-use miette::{IntoDiagnostic, Result, SourceSpan};
+use miette::{
+    IntoDiagnostic,
+    Result,
+    SourceSpan,
+};
 use regex::Regex;
 use shrinkwraprs::Shrinkwrap;
 use smartstring::alias::String;
@@ -13,10 +26,11 @@ lazy_static! {
     static ref LABEL_REPO_RE: Regex = Regex::new(r"^@[\w\-.][\w\-.~]*$").unwrap();
 }
 
-/// A Repo represents a **repository** (e.g. `@foo`, `@fbcode`, `@com_github_foo_bar`).
-/// Repositories are used to group related packages together. A repository is identified
-/// by a name, which must be a valid label repository name (i.e. it must start with an `@`
-/// and contain only alphanumeric characters and underscores).
+/// A Repo represents a **repository** (e.g. `@foo`, `@fbcode`,
+/// `@com_github_foo_bar`). Repositories are used to group related packages
+/// together. A repository is identified by a name, which must be a valid label
+/// repository name (i.e. it must start with an `@` and contain only
+/// alphanumeric characters and underscores).
 #[derive(
     Debug,
     Default,
@@ -43,8 +57,8 @@ impl Repo {
         if !LABEL_REPO_RE.is_match(repo) || !label.contains(repo) {
             return Err(SyntaxError::InvalidRepoName {
                 label: label.into(),
-                repo: repo.into(),
-                span: SourceSpan::new(0.into(), repo.len().into()),
+                repo:  repo.into(),
+                span:  SourceSpan::new(0.into(), repo.len().into()),
             })
             .into_diagnostic();
         }
@@ -84,10 +98,10 @@ pub struct Label {
     #[builder(setter(into))]
     pub pkg: String,
 
-    /// Name is the name of the target the label refers to. Name must not be empty.
-    /// Note that the name may be omitted from a label string if it is equal to
-    /// the last component of the package name ("//x" is equivalent to "//x:x"),
-    /// but in either case, Name should be set here.
+    /// Name is the name of the target the label refers to. Name must not be
+    /// empty. Note that the name may be omitted from a label string if it
+    /// is equal to the last component of the package name ("//x" is
+    /// equivalent to "//x:x"), but in either case, Name should be set here.
     #[builder(setter(into))]
     pub name: String,
 
@@ -109,7 +123,8 @@ impl Label {
     /// * `pkg` - The package name, which is usually the directory that contains
     /// the target. If both Repo and Pkg are omitted, the label is relative.
     ///
-    /// * `name` - The name of the target the label refers to. Name must not be empty.
+    /// * `name` - The name of the target the label refers to. Name must not be
+    ///   empty.
     /// Note that the name may be omitted from a label string if it is equal to
     /// the last component of the package name ("//x" is equivalent to "//x:x"),
     /// but in either case, Name should be set here.
@@ -127,7 +142,7 @@ impl Label {
         // split the string on the // delimiter to get the unchecked repo
         let unchecked_repo: &str = label.split("//").next().ok_or(SyntaxError::InvalidLabel {
             label: label.into(),
-            span: SourceSpan::new(0.into(), label.len().into()),
+            span:  SourceSpan::new(0.into(), label.len().into()),
         })?;
 
         let repo = Repo::new(label, unchecked_repo)?;
