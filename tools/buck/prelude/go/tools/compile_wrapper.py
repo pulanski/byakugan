@@ -106,7 +106,7 @@ def main(argv):
                     [
                         "-embedcfg",
                         args.embedcfg,
-                    ]
+                    ],
                 )
 
             # This will create go_asm.h

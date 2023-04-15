@@ -19,10 +19,10 @@ from pathlib import Path
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Extract .zip files to a directory in a cross platform manner"
+        description="Extract .zip files to a directory in a cross platform manner",
     )
     parser.add_argument(
-        "--output", type=Path, required=True, help="The directory to write to"
+        "--output", type=Path, required=True, help="The directory to write to",
     )
     parser.add_argument("src", type=Path, help="The archive to extract to --output")
     args = parser.parse_args()

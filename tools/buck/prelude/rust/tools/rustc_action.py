@@ -232,7 +232,7 @@ async def main() -> int:
         # Unescape previously escaped newlines.
         # Example: \\\\n\\n -> \\\n\n -> \\n\n
         env.update(
-            {k: v.replace("\\n", "\n").replace("\\\n", "\\n") for k, v in args.env}
+            {k: v.replace("\\n", "\n").replace("\\\n", "\\n") for k, v in args.env},
         )
     if args.path_env:
         env.update({k: str(Path(v).resolve()) for k, v in args.path_env})
@@ -247,12 +247,12 @@ async def main() -> int:
 
     if args.remap_cwd_prefix is not None:
         rustc_args.append(
-            "--remap-path-prefix={}={}".format(os.getcwd(), args.remap_cwd_prefix)
+            "--remap-path-prefix={}={}".format(os.getcwd(), args.remap_cwd_prefix),
         )
         rustc_args.append(
             "--remap-path-prefix={}={}".format(
-                os.path.realpath(os.getcwd()), args.remap_cwd_prefix
-            )
+                os.path.realpath(os.getcwd()), args.remap_cwd_prefix,
+            ),
         )
 
     with tempfile.NamedTemporaryFile(
@@ -280,7 +280,7 @@ async def main() -> int:
         print(
             f"res={repr(res)} "
             f"got_error_diag={got_error_diag} "
-            f"args.failure_filter {args.failure_filter}"
+            f"args.failure_filter {args.failure_filter}",
         )
 
     # If rustc is reporting a silent error, make it loud

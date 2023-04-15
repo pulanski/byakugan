@@ -208,7 +208,7 @@ class BuckTestResult(unittest._TextTestResult):
     """
 
     def __init__(
-        self, stream, descriptions, verbosity, show_output, main_program, suite
+        self, stream, descriptions, verbosity, show_output, main_program, suite,
     ):
         super(BuckTestResult, self).__init__(stream, descriptions, verbosity)
         self._main_program = main_program
@@ -229,10 +229,10 @@ class BuckTestResult(unittest._TextTestResult):
         # here to intercept callers who directly operate on these fileno
         # objects.
         sys.stdout = CallbackStream(
-            self.addStdout, self.addStdoutBytes, orig=sys.stdout
+            self.addStdout, self.addStdoutBytes, orig=sys.stdout,
         )
         sys.stderr = CallbackStream(
-            self.addStderr, self.addStderrBytes, orig=sys.stderr
+            self.addStderr, self.addStderrBytes, orig=sys.stderr,
         )
         self._current_test = test
         self._test_start_time = time.time()
@@ -278,7 +278,7 @@ class BuckTestResult(unittest._TextTestResult):
         self._results.append(
             {
                 "testCaseName": "{0}.{1}".format(
-                    test.__class__.__module__, test.__class__.__name__
+                    test.__class__.__module__, test.__class__.__name__,
                 ),
                 "testCase": test._testMethodName,
                 "type": self._current_status,
@@ -287,7 +287,7 @@ class BuckTestResult(unittest._TextTestResult):
                 "stacktrace": self._stacktrace,
                 "stdOut": self._stdout,
                 "stdErr": self._stderr,
-            }
+            },
         )
 
         self._current_test = None
@@ -582,7 +582,7 @@ class MainProgram(object):
             help="Increase the verbosity (may be specified multiple times)",
         )
         op.add_option(
-            "-?", "--help", action="help", help="Show this help message and exit"
+            "-?", "--help", action="help", help="Show this help message and exit",
         )
 
     def parse_options(self, argv):
@@ -623,14 +623,14 @@ class MainProgram(object):
             if len(parts) != 2:
                 self.option_parser.error(
                     "--logger argument must be of the "
-                    "form <name>=<level>: %s" % value
+                    "form <name>=<level>: %s" % value,
                 )
             name = parts[0]
             level_name = parts[1].lower()
             level = level_names.get(level_name)
             if level is None:
                 self.option_parser.error(
-                    "invalid log level %r for log category %s" % (parts[1], name)
+                    "invalid log level %r for log category %s" % (parts[1], name),
                 )
             logging.getLogger(name).setLevel(level)
 
@@ -679,7 +679,7 @@ class MainProgram(object):
                     name = _format_test_name(test.__class__, method_name)
                 else:
                     raise Exception(
-                        "Bad test list format: %s" % (self.options.list_format,)
+                        "Bad test list format: %s" % (self.options.list_format,),
                     )
 
                 print(name)
@@ -725,7 +725,7 @@ class MainProgram(object):
         self._original_working_dir = os.getcwd()
 
         self.cov = coverage.Coverage(
-            include=self.options.coverage_include, omit=self.options.coverage_omit
+            include=self.options.coverage_include, omit=self.options.coverage_omit,
         )
         self.cov.erase()
         self.cov.start()

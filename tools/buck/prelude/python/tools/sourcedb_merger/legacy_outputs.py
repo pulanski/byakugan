@@ -47,7 +47,7 @@ class FullBuildMap:
 @dataclasses.dataclass(frozen=True)
 class ConflictMap:
     content: Mapping[inputs.Target, ConflictInfo] = dataclasses.field(
-        default_factory=dict
+        default_factory=dict,
     )
 
     def to_json(self) -> Dict[str, Dict[str, str]]:
@@ -66,7 +66,7 @@ class MergeResult:
         return {
             "build_map": self.build_map.to_json(),
             "built_targets_count": len(
-                [target.name for target in self.build_map.get_all_targets()]
+                [target.name for target in self.build_map.get_all_targets()],
             ),
             "dropped_targets": self.dropped_targets.to_json(),
         }
@@ -103,7 +103,7 @@ def insert_build_map_inplace(
 ) -> None:
     for artifact_path, source_path in merge_candidate.items():
         build_map.setdefault(
-            artifact_path, outputs.SourceInfo(source_path=source_path, target=target)
+            artifact_path, outputs.SourceInfo(source_path=source_path, target=target),
         )
 
 

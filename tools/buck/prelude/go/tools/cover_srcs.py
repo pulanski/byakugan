@@ -56,7 +56,7 @@ def main(argv):
                     "-o",
                     covered_src,
                     src,
-                ]
+                ],
             )
             # we need just the source name for the --cover-pkgs argument
             coverage_vars[var] = src.name

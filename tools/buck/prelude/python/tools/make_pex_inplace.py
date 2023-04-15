@@ -90,7 +90,7 @@ def parse_args() -> argparse.Namespace:
         help="The interpreter flags for the hashbang",
     )
     parser.add_argument(
-        "--entry-point", required=True, help="The main module to execute"
+        "--entry-point", required=True, help="The main module to execute",
     )
     parser.add_argument(
         "--modules-dir",

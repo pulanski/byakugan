@@ -84,7 +84,7 @@ def main(argv: List[str]) -> int:
         ar_path = os.path.relpath(args.ar, start=objects_path)
         archive_path = os.path.relpath(args.archive, start=objects_path)
         output = subprocess.check_output(
-            [ar_path, "t", archive_path], cwd=objects_path
+            [ar_path, "t", archive_path], cwd=objects_path,
         ).decode()
         member_list = [member for member in output.split("\n") if member]
 
@@ -109,7 +109,7 @@ def main(argv: List[str]) -> int:
                     current_file = _gen_filename(member, current)
                     # rename current 'member' file to tmp
                     output = subprocess.check_output(
-                        ["mv", member, tmp_filename], cwd=objects_path
+                        ["mv", member, tmp_filename], cwd=objects_path,
                     ).decode()
                     assert not output
                     # extract the file from archive
@@ -120,19 +120,19 @@ def main(argv: List[str]) -> int:
                     assert not output
                     # rename the newly extracted file
                     output = subprocess.check_output(
-                        ["mv", member, current_file], cwd=objects_path
+                        ["mv", member, current_file], cwd=objects_path,
                     ).decode()
                     assert not output
                     # rename the tmp file back to 'member'
                     output = subprocess.check_output(
-                        ["mv", tmp_filename, member], cwd=objects_path
+                        ["mv", tmp_filename, member], cwd=objects_path,
                     ).decode()
                     assert not output
                     known_objects.append(_gen_path(objects_path, current_file))
         else:
             # no duplicated filename
             output = subprocess.check_output(
-                [ar_path, "xv", archive_path], cwd=objects_path
+                [ar_path, "xv", archive_path], cwd=objects_path,
             ).decode()
             for line in output.splitlines():
                 assert line.startswith("x - ")
@@ -146,7 +146,7 @@ def main(argv: List[str]) -> int:
             known_objects.append(line)
     elif file_type == ArchiveKind.UNKNOWN:
         raise AssertionError(
-            f"unknown archive kind for file {args.archive}: {debug_output}"
+            f"unknown archive kind for file {args.archive}: {debug_output}",
         )
 
     manifest = {

@@ -21,7 +21,7 @@ def main() -> None:
 
     exclusions = [re.compile(e) for e in args.exclude]
     files = subprocess.check_output(
-        ["tar", "--list", "-f", args.tar_archive] + args.tar_flag, encoding="utf-8"
+        ["tar", "--list", "-f", args.tar_archive] + args.tar_flag, encoding="utf-8",
     )
     files = [f.strip() for f in files.split()]
 

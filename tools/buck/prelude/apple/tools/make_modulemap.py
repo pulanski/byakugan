@@ -63,7 +63,7 @@ class Module:
 
 
 def _write_single_module(
-    f: TextIOWrapper, name: str, headers: Iterable[str], path_prefix: str
+    f: TextIOWrapper, name: str, headers: Iterable[str], path_prefix: str,
 ) -> None:
     module = Module(name)
     for h in headers:
@@ -73,7 +73,7 @@ def _write_single_module(
 
 
 def _write_submodules(
-    f: TextIOWrapper, name: str, headers: Iterable[str], path_prefix: str
+    f: TextIOWrapper, name: str, headers: Iterable[str], path_prefix: str,
 ) -> None:
     # Create a tree of nested modules, one for each path component.
     root_module = Module(name)
@@ -99,18 +99,18 @@ module {name}.Swift {{
     header "{swift_header_path}"
     requires objc
 }}
-"""
+""",
     )
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--output", required=True, help="The path to write the modulemap to"
+        "--output", required=True, help="The path to write the modulemap to",
     )
     parser.add_argument("--name", required=True, help="The name of the module")
     parser.add_argument(
-        "--swift-header", help="If this is a mixed module extend with this Swift header"
+        "--swift-header", help="If this is a mixed module extend with this Swift header",
     )
     parser.add_argument(
         "--use-submodules",
@@ -122,7 +122,7 @@ def main() -> None:
         required=True,
     )
     parser.add_argument(
-        "mappings", nargs="*", default=[], help="A list of import paths"
+        "mappings", nargs="*", default=[], help="A list of import paths",
     )
     args = parser.parse_args()
 

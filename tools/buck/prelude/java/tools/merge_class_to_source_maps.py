@@ -14,7 +14,7 @@ import sys
 def main(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--output", "-o", type=argparse.FileType("w"), default=sys.stdin
+        "--output", "-o", type=argparse.FileType("w"), default=sys.stdin,
     )
     parser.add_argument(
         "--relative-to",

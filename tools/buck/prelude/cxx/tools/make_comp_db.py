@@ -74,7 +74,7 @@ def main(argv):
 
     parser_merge = subparsers.add_parser("merge")
     parser_merge.add_argument(
-        "--output", type=argparse.FileType("w"), default=sys.stdout
+        "--output", type=argparse.FileType("w"), default=sys.stdout,
     )
     parser_merge.add_argument("entries", nargs="*")
     parser_merge.set_defaults(func=merge)

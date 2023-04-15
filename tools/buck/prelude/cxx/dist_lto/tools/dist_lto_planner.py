@@ -43,7 +43,7 @@ from typing import List
 def _get_argsfile(args) -> str:
     # go through the flags passed to linker and find the index argsfile
     argsfiles = list(
-        filter(lambda arg: arg.endswith("thinlto.index.argsfile"), args.index_args)
+        filter(lambda arg: arg.endswith("thinlto.index.argsfile"), args.index_args),
     )
     assert (
         len(argsfiles) == 1
@@ -225,16 +225,16 @@ def main(argv):
                         "imports": imports_list,
                         "archive_imports": archives_list,
                         "bitcode_file": os.path.join(
-                            output_path, os.path.basename(bc_file)
+                            output_path, os.path.basename(bc_file),
                         ),
-                    }
+                    },
                 )
             else:
                 object_plans.append(
                     {
                         "is_bc": False,
                         "path": obj,
-                    }
+                    },
                 )
 
         archive_plan["objects"] = object_plans
@@ -286,7 +286,7 @@ def main(argv):
 
     # build index file for final link use
     with open(index_path("index.full")) as full_index_input, open(
-        args.final_link_index, "w"
+        args.final_link_index, "w",
     ) as final_link_index_output:
         final_link_index_output.write("\n".join(lib_search_path) + "\n")
         for line in full_index_input:
@@ -298,13 +298,13 @@ def main(argv):
                 if mapping[path]["output"]:
                     # handle files that were not extracted from archives
                     output = mapping[path]["output"].replace(
-                        bitcode_suffix, opt_objects_suffix
+                        bitcode_suffix, opt_objects_suffix,
                     )
                     final_link_index_output.write(output + "\n")
                 elif os.path.exists(index_path(path) + imports_suffix):
                     # handle files built from source that were extracted from archives
                     opt_objects_path = path.replace(
-                        "/objects/", "/opt_objects/objects/"
+                        "/objects/", "/opt_objects/objects/",
                     )
                     final_link_index_output.write(opt_objects_path + "\n")
                 else:

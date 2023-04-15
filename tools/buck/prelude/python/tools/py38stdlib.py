@@ -328,5 +328,5 @@ STDLIB_MODULES: FrozenSet[str] = frozenset(
         "zipfile",
         "zipimport",
         "zlib",
-    ]
+    ],
 )

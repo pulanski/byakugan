@@ -30,7 +30,7 @@ class StaticExtensionFinder:
         if not _check_module(fullname):
             return None
         spec = ModuleSpec(
-            fullname, StaticExtensionLoader, origin="static-extension", is_package=False
+            fullname, StaticExtensionLoader, origin="static-extension", is_package=False,
         )
         return spec
 

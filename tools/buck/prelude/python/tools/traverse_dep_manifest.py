@@ -71,7 +71,7 @@ def flatten_trie(trie: Dict[str, Any]):
 
 
 def ensure_deps(
-    module: str, deps: Dict[str, Any], all_deps: Dict[str, str]
+    module: str, deps: Dict[str, Any], all_deps: Dict[str, str],
 ) -> Tuple[int, Set[str], Set[str]]:
     required_modules = set()
     missing = set()

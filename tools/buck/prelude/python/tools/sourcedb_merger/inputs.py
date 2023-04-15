@@ -29,17 +29,17 @@ class PartialBuildMap:
         if not isinstance(input_json, dict):
             raise BuildMapLoadError(
                 "Input JSON for build map should be a dict."
-                f"Got {type(input_json)} instead"
+                f"Got {type(input_json)} instead",
             )
         result: Dict[str, str] = {}
         for key, value in input_json.items():
             if not isinstance(key, str):
                 raise BuildMapLoadError(
-                    f"Build map keys are expected to be strings. Got `{key}`."
+                    f"Build map keys are expected to be strings. Got `{key}`.",
                 )
             if not isinstance(value, str):
                 raise BuildMapLoadError(
-                    f"Build map values are expected to be strings. Got `{value}`."
+                    f"Build map values are expected to be strings. Got `{value}`.",
                 )
             if pathlib.Path(key).suffix not in (".py", ".pyi"):
                 continue
@@ -59,20 +59,20 @@ class TargetEntry:
 
 
 def load_targets_and_build_maps_from_json(
-    buck_root: pathlib.Path, input_json: object
+    buck_root: pathlib.Path, input_json: object,
 ) -> Iterable[TargetEntry]:
     if not isinstance(input_json, dict):
         raise BuildMapLoadError(
-            f"Input JSON should be a dict. Got {type(input_json)} instead"
+            f"Input JSON should be a dict. Got {type(input_json)} instead",
         )
     for key, value in input_json.items():
         if not isinstance(key, str):
             raise BuildMapLoadError(
-                f"Target keys are expected to be strings. Got `{key}`."
+                f"Target keys are expected to be strings. Got `{key}`.",
             )
         if not isinstance(value, str):
             raise BuildMapLoadError(
-                f"Sourcedb file paths are expected to be strings. Got `{value}`."
+                f"Sourcedb file paths are expected to be strings. Got `{value}`.",
             )
         yield TargetEntry(
             target=Target(key),
@@ -81,7 +81,7 @@ def load_targets_and_build_maps_from_json(
 
 
 def load_targets_and_build_maps_from_path(
-    buck_root: pathlib.Path, input_path: str
+    buck_root: pathlib.Path, input_path: str,
 ) -> Iterable[TargetEntry]:
     with open(buck_root / input_path, "r") as input_file:
         return load_targets_and_build_maps_from_json(buck_root, json.load(input_file))

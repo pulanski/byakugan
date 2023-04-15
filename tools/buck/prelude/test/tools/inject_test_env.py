@@ -14,7 +14,7 @@ import os
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "env_file", help="A JSON file containing the environment to inject"
+        "env_file", help="A JSON file containing the environment to inject",
     )
     parser.add_argument("executable")
     parser.add_argument("args", nargs="*")

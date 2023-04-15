@@ -126,7 +126,7 @@ def _cleanup_flags(clang_opt_flags: List[str]) -> List[str]:
     try:
         output = (
             subprocess.check_output(
-                clang_opt_flags + ["-###"], stderr=subprocess.STDOUT
+                clang_opt_flags + ["-###"], stderr=subprocess.STDOUT,
             )
             .decode()
             .splitlines()
@@ -168,7 +168,7 @@ def main(argv: List[str]) -> int:
     parser.add_argument("--index", help="The thinlto index file.")
     parser.add_argument("--split-dwarf", required=False, help="Split dwarf option.")
     parser.add_argument(
-        "--args", help="The argsfile containing unfiltered and unprocessed flags."
+        "--args", help="The argsfile containing unfiltered and unprocessed flags.",
     )
     parser.add_argument("--debug", action="store_true", help="Dump clang -cc1 flags.")
     parser.add_argument("opt_args", nargs=argparse.REMAINDER)
@@ -188,7 +188,7 @@ def main(argv: List[str]) -> int:
             "-c",
             args.input,
             f"-fthinlto-index={args.index}",
-        ]
+        ],
     )
     if args.split_dwarf:
         clang_opt_flags.append(f"-gsplit-dwarf={args.split_dwarf}")

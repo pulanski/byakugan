@@ -19,7 +19,7 @@ import sys
 
 def _parse_args():
     parser = argparse.ArgumentParser(
-        description="Tool for converting used_classes.json to a format that buck2 understands."
+        description="Tool for converting used_classes.json to a format that buck2 understands.",
     )
 
     parser.add_argument(
@@ -68,7 +68,7 @@ def rewrite_dep_file(used_classes_paths, dst_path, jar_to_jar_dir_map_file):
                         [
                             os.path.join(used_jar_dir, used_class)
                             for used_class in used_classes.keys()
-                        ]
+                        ],
                     )
 
     with open(dst_path, "w") as f:

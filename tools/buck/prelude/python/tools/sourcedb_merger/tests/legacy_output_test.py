@@ -31,15 +31,15 @@ class LegacyOutputsTest(unittest.TestCase):
                 build_map=FullBuildMap(
                     {
                         "a.py": SourceInfo(
-                            source_path="fbcode/a.py", target=Target("//test:foo")
+                            source_path="fbcode/a.py", target=Target("//test:foo"),
                         ),
                         "b.py": SourceInfo(
-                            source_path="fbcode/b.py", target=Target("//test:bar")
+                            source_path="fbcode/b.py", target=Target("//test:bar"),
                         ),
                         "c.py": SourceInfo(
-                            source_path="fbcode/c.py", target=Target("//test:foo")
+                            source_path="fbcode/c.py", target=Target("//test:foo"),
                         ),
-                    }
+                    },
                 ),
                 dropped_targets=ConflictMap(
                     {
@@ -49,7 +49,7 @@ class LegacyOutputsTest(unittest.TestCase):
                             preserved_source_path="fbcode/a.py",
                             dropped_source_path="fbcode/another/a.py",
                         ),
-                    }
+                    },
                 ),
             ).to_json(),
             {
@@ -65,7 +65,7 @@ class LegacyOutputsTest(unittest.TestCase):
                         "conflict_with": "//test:foo",
                         "dropped_source_path": "fbcode/another/a.py",
                         "preserved_source_path": "fbcode/a.py",
-                    }
+                    },
                 },
             },
         )
@@ -103,7 +103,7 @@ class LegacyOutputsTest(unittest.TestCase):
                 "//test:foo": {
                     "foo.py": "source/foo.py",
                     "__manifest__.py": "generated/__manifest__.py",
-                }
+                },
             },
             expected_build_map={"foo.py": "source/foo.py"},
             expected_conflicts={},
@@ -113,7 +113,7 @@ class LegacyOutputsTest(unittest.TestCase):
                 "//test:foo": {
                     "foo.py": "source/foo.py",
                     "__test_main__.py": "generated/__test_main__.py",
-                }
+                },
             },
             expected_build_map={"foo.py": "source/foo.py"},
             expected_conflicts={},
@@ -123,7 +123,7 @@ class LegacyOutputsTest(unittest.TestCase):
                 "//test:foo": {
                     "foo.py": "source/foo.py",
                     "__test_modules__.py": "generated/__test_modules__.py",
-                }
+                },
             },
             expected_build_map={"foo.py": "source/foo.py"},
             expected_conflicts={},
@@ -178,7 +178,7 @@ class LegacyOutputsTest(unittest.TestCase):
                     "artifact_path": "x.py",
                     "preserved_source_path": "source/b.py",
                     "dropped_source_path": "source/c.py",
-                }
+                },
             },
         )
         assert_merged(
@@ -199,7 +199,7 @@ class LegacyOutputsTest(unittest.TestCase):
                     "artifact_path": "x.py",
                     "preserved_source_path": "source/c.py",
                     "dropped_source_path": "source/d.py",
-                }
+                },
             },
         )
         assert_merged(

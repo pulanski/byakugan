@@ -33,14 +33,14 @@ def do_unzip(archive, output_dir):
             symlink_dst = z.read(info).decode("utf-8")
             if os.path.isabs(symlink_dst):
                 raise RuntimeError(
-                    f"Symlink `{info.filename}` -> `{symlink_dst}` points to absolute path which is prohibited."
+                    f"Symlink `{info.filename}` -> `{symlink_dst}` points to absolute path which is prohibited.",
                 )
             output_dir_relative_symlink_dst = os.path.normpath(
-                os.path.join(os.path.dirname(info.filename), symlink_dst)
+                os.path.join(os.path.dirname(info.filename), symlink_dst),
             )
             if output_dir_relative_symlink_dst.startswith(os.pardir):
                 raise RuntimeError(
-                    f"Symlink `{info.filename}` -> `{symlink_dst}` (normalized destination path relative to archive output directory is `{output_dir_relative_symlink_dst}`) points outside of archive output directory which is prohibited."
+                    f"Symlink `{info.filename}` -> `{symlink_dst}` (normalized destination path relative to archive output directory is `{output_dir_relative_symlink_dst}`) points outside of archive output directory which is prohibited.",
                 )
             os.symlink(symlink_dst, symlink_path)
 

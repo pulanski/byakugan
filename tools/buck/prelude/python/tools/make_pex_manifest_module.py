@@ -54,7 +54,7 @@ def main() -> None:
     output: Path = args.output
     if output.exists():
         raise ValueError(
-            f"Output path '{output}' already exists, refusing to overwrite."
+            f"Output path '{output}' already exists, refusing to overwrite.",
         )
 
     modules: Set[str] = set()
@@ -73,13 +73,13 @@ def main() -> None:
             entries = json.load(f)
     if not isinstance(entries, dict):
         raise ValueError(
-            f"Manifest entries in {args.manifest_entries} aren't a dictionary"
+            f"Manifest entries in {args.manifest_entries} aren't a dictionary",
         )
     if "modules" in entries:
         raise ValueError("'modules' can't be a key in manifest entries")
     entries["modules"] = sorted(filter(None, (path_to_module(m) for m in modules)))
     output.write_text(
-        "\n".join((f"{key} = {repr(value)}" for key, value in entries.items()))
+        "\n".join((f"{key} = {repr(value)}" for key, value in entries.items())),
     )
 
 

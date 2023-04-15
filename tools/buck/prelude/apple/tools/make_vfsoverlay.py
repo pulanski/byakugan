@@ -37,10 +37,10 @@ class OverlayRoot(TypedDict):
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--output", required=True, help="The path to write the VFS overlay to"
+        "--output", required=True, help="The path to write the VFS overlay to",
     )
     parser.add_argument(
-        "mappings", nargs="*", default=[], help="A list of virtual paths to real paths"
+        "mappings", nargs="*", default=[], help="A list of virtual paths to real paths",
     )
     args = parser.parse_args()
 
@@ -77,7 +77,7 @@ def _get_roots(mappings: Dict[str, List[Tuple[str, str]]]) -> List[OverlayRoot]:
                     "name": src,
                     "type": "file",
                     "external-contents": dst,
-                }
+                },
             )
 
         roots.append(
@@ -85,7 +85,7 @@ def _get_roots(mappings: Dict[str, List[Tuple[str, str]]]) -> List[OverlayRoot]:
                 "name": folder,
                 "type": "directory",
                 "contents": contents,
-            }
+            },
         )
 
     return roots

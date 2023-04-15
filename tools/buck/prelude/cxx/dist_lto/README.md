@@ -1,4 +1,5 @@
 # Distributed ThinLTO in Buck2
+
 Sean Gillespie, April 2022
 
 This document is a technical overview into Buck2's implementation of a distributed ThinLTO.
@@ -15,7 +16,7 @@ long suffered a fundamental limitation; a C or C++ compiler can only optimize co
 translation unit. For a language like C or C++, this means in practice that only code that is included via
 the preprocessor or specified in the translation unit can be optimized as a single unit. C and C++ compilers
 are unable to inline functions that are defined in different translation units. However, a crucial advantage
-of this compilation model is that all C and C++ compiler invocations are *completely parallelizable*; despite
+of this compilation model is that all C and C++ compiler invocations are _completely parallelizable_; despite
 sacrificing some code quality, C and C++ compilation turns into a massively parallel problem with a serial
 link step at the very end.
 
@@ -38,7 +39,6 @@ flowchart LR;
 
 ([Rendered](https://fburl.com/mermaid/rzup8o32). Compilation and optimization of a, b, and c can proceed in parallel.)
 
-
 In cases where absolute performance is required, though, the inability to perform cross-translation-unit
 (or "cross-module", in LLVM parlance) optimizations becomes more of a problem. To solve this, a new compilation
 paradigm was designed, dubbed "Link-Time Optimization" (LTO). In this scheme, a compiler will not produce machine code
@@ -48,7 +48,7 @@ optimization passes on the mega-module, and produce a final binary from that.
 
 This works quite well, if all that you're looking for is run-time performance. A major drawback of the LTO approach is
 that all of the parallelism gained from optimizing translation units individually is now completely lost; instead, the
-linker (using a plugin) will do a single-threaded pass of *all code* produced by compilation steps. This is extremely
+linker (using a plugin) will do a single-threaded pass of _all code_ produced by compilation steps. This is extremely
 slow, memory-intensive, and unable to be run incrementally. There are targets at Meta that simply can't be LTO-compiled
 because of their size.
 
@@ -74,14 +74,15 @@ flowchart LR;
 
     main.o --> |ld| main
 ```
+
 ([Rendered](https://fburl.com/mermaid/kid35io9). `a.bc`, `b.bc`, and `c.bc` are LLVM bitcode; they are all merged
 together into a single module, `a_b_c_optimized.bc`, which is then optimized and codegen'd into a final binary.)
 
 The idea of ThinLTO comes from a desire to maintain the ability to optimize modules in parallel while still
-allowing for profitable cross-module optimizations.  The idea is this:
+allowing for profitable cross-module optimizations. The idea is this:
 
 1. Just like regular LTO, the compiler emits bitcode instead of machine code. However, it also contains some light
-metadata such as a call graph of symbols within the module.
+   metadata such as a call graph of symbols within the module.
 2. The monolithic LTO link is split into three steps: `index`, `opt`, and `link`.
 
 ```
@@ -149,7 +150,7 @@ system is only aware of what the graph could be after the `index` step is comple
 Buck2 has explicit support for this paradigm [("dynamic dependencies")](https://fburl.com/gdoc/zklwhkll). Therefore, for Buck2, the basic strategy looks like:
 
 1. Invoke `clang` to act as `index`. `index` will output a file for every object file that indicates what other modules
-need to be present when running `opt` on the object file (an "imports file").
+   need to be present when running `opt` on the object file (an "imports file").
 2. Read imports files and construct a graph of dynamic `opt` actions whose dependencies mirror the contents of the imports files.
 3. Collect the outputs from the `opt` actions and invoke the linker to produce a final binary.
 
@@ -167,7 +168,7 @@ Buck2's implementation contains four phases of actions:
 ### thin_lto_prepare
 
 It is a reality of Buck2 today that some rules don't produce a statically-known list of object files. The list of object
-files is known *a priori* during C/C++ compilation, since they have a one-to-one correspondence to source files; however,
+files is known _a priori_ during C/C++ compilation, since they have a one-to-one correspondence to source files; however,
 the Rust compiler emits an archive of object files; without inspecting the archive, Buck2 has no way of knowing what
 the contents of the archive are, or even if they contain bitcode at all.
 
@@ -197,24 +198,24 @@ communicates inputs and outputs of `thin_lto_index` to a Python script, `dist_lt
 a list of 7-tuples, whose members are:
 
 1. The path to the source bitcode file. This is used as an index into
-    a dictionary that records much of the metadata coming
-    from these lines.
+   a dictionary that records much of the metadata coming
+   from these lines.
 2. The path to an output file. `dist_lto_planner.py`is expected to place a
-    ThinLTO index file at this location (suffixed `.thinlto.bc`).
+   ThinLTO index file at this location (suffixed `.thinlto.bc`).
 3. The path to an output plan. This script is expected to place a link
-    plan here (a JSON document indicating which other object files this)
-    object file depends on, among other things.
+   plan here (a JSON document indicating which other object files this)
+   object file depends on, among other things.
 4. If this object file came from an archive, the index of the archive in
-    the Starlark archives array.
+   the Starlark archives array.
 5. If this object file came from an archive, the name of the archive.
 6. If this object file came from an archive, the path to an output plan.
-    This script is expected to produce an archive link plan here (a JSON)
-    document similar to the object link plan, except containing link
-    information for every file in the archive from which this object
-    came.
+   This script is expected to produce an archive link plan here (a JSON)
+   document similar to the object link plan, except containing link
+   information for every file in the archive from which this object
+   came.
 7. If this object file came from an archive, the indexes directory of that
-    archive. This script is expected to place all ThinLTO indexes derived
-    from object files originating from this archive in that directory.
+   archive. This script is expected to place all ThinLTO indexes derived
+   from object files originating from this archive in that directory.
 
 There are two indices that are derived from this meta file: the object
 index (`mapping["index"]`) and the archive index (`mapping["archive_index"]`).
@@ -228,7 +229,7 @@ a number of artifacts:
 
 1. For each object file, a `thinlto.bc` file (`bitcode_file`). This file is the same as the input bitcode file, except that LLVM has inserted a number of module imports to refer to the other modules that will be present when the object file is optimized.
 2. For each object file, an optimization plan (`plan`). The optimization plan is a JSON document indicating how to construct an `opt` action for this object file. This plan includes
-this object file's module imports, whether or not this file contains bitcode at all, a location to place the optimized object file, and a list of archives that this object file imported.
+   this object file's module imports, whether or not this file contains bitcode at all, a location to place the optimized object file, and a list of archives that this object file imported.
 3. For each archive, an optimization plan (`archive_plan`), which contains optimization plans for all of the object files contained within the archive.
 
 This action is a dynamic action because, in the case that there are archives that needed to be preprocessed by `thin_lto_prepare`, this action must read the archive manifest.

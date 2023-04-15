@@ -30,7 +30,7 @@ class InputsTest(unittest.TestCase):
     def test_load_partial_build_map(self) -> None:
         def assert_loaded(input_json: object, expected: object) -> None:
             self.assertEqual(
-                PartialBuildMap.load_from_json(input_json).content, expected
+                PartialBuildMap.load_from_json(input_json).content, expected,
             )
 
         def assert_not_loaded(input_json: object) -> None:
@@ -49,10 +49,10 @@ class InputsTest(unittest.TestCase):
         )
         assert_loaded({"Kratos": "Axe", "Atreus": "Bow"}, expected={})
         assert_loaded(
-            {"Kratos.py": "Axe", "Atreus": "Bow"}, expected={"Kratos.py": "Axe"}
+            {"Kratos.py": "Axe", "Atreus": "Bow"}, expected={"Kratos.py": "Axe"},
         )
         assert_loaded(
-            {"Kratos": "Axe", "Atreus.pyi": "Bow"}, expected={"Atreus.pyi": "Bow"}
+            {"Kratos": "Axe", "Atreus.pyi": "Bow"}, expected={"Atreus.pyi": "Bow"},
         )
 
     def test_load_targets_and_build_map(self) -> None:
@@ -70,7 +70,7 @@ class InputsTest(unittest.TestCase):
 
             self.assertCountEqual(
                 load_targets_and_build_maps_from_json(
-                    root_path, {"//target0": "a.json", "//target1": "b.json"}
+                    root_path, {"//target0": "a.json", "//target1": "b.json"},
                 ),
                 [
                     TargetEntry(
@@ -80,7 +80,7 @@ class InputsTest(unittest.TestCase):
                     TargetEntry(
                         target=Target("//target1"),
                         build_map=PartialBuildMap(
-                            {"bfg.py": "green", "unmakyr.py": "red"}
+                            {"bfg.py": "green", "unmakyr.py": "red"},
                         ),
                     ),
                 ],
@@ -90,18 +90,18 @@ class InputsTest(unittest.TestCase):
             with self.assertRaises(FileNotFoundError):
                 list(
                     load_targets_and_build_maps_from_json(
-                        root_path, {"//target0": "nonexistent.json"}
-                    )
+                        root_path, {"//target0": "nonexistent.json"},
+                    ),
                 )
             with self.assertRaises(json.JSONDecodeError):
                 list(
                     load_targets_and_build_maps_from_json(
-                        root_path, {"//target0": "c.txt"}
-                    )
+                        root_path, {"//target0": "c.txt"},
+                    ),
                 )
             with self.assertRaises(BuildMapLoadError):
                 list(
                     load_targets_and_build_maps_from_json(
-                        root_path, {"//target0": "d.json"}
-                    )
+                        root_path, {"//target0": "d.json"},
+                    ),
                 )

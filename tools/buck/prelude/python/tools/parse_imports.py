@@ -115,7 +115,7 @@ class TopSymbolsVisitor(ast.NodeVisitor):
             return super().visit(node)
         except AttributeError as exc:
             logger.error(
-                "Got %r when parsing %s from %s", exc, ast.dump(node), self.path
+                "Got %r when parsing %s from %s", exc, ast.dump(node), self.path,
             )
 
     def visit_Module(self, node: ast.Module) -> None:
@@ -185,7 +185,7 @@ class TopSymbolsVisitor(ast.NodeVisitor):
 
 
 def get_top_level_symbols(
-    file: Path, content: Union[str, bytes]
+    file: Path, content: Union[str, bytes],
 ) -> Tuple[Set[str], Set[str]]:
     path = str(file)
     module = _get_ast_tree(path, content)
@@ -220,7 +220,7 @@ def module_from_src(src: str, prefix: str) -> str:
 
 
 def update_symbols_with_star_imports(
-    symbols: Dict[str, Set[str]], star_imports: Dict[str, Set[str]]
+    symbols: Dict[str, Set[str]], star_imports: Dict[str, Set[str]],
 ) -> None:
     """Resolve star imports, changing the contents of the symbols map"""
 

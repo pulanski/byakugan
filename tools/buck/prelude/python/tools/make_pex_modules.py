@@ -185,7 +185,7 @@ def add_path_mapping(
         return out
 
     link_path = os.path.relpath(
-        os.path.realpath(src), os.path.realpath(new_dest.parent)
+        os.path.realpath(src), os.path.realpath(new_dest.parent),
     )
     if new_dest in path_mapping:
         prev, prev_origin = path_mapping[new_dest]
@@ -199,7 +199,7 @@ def add_path_mapping(
                     format_src(link_path, origin),
                     format_src(prev, prev_origin),
                     src,
-                )
+                ),
             )
     path_mapping[new_dest] = (link_path, origin)
     dirs_to_create.add(new_dest.parent)
@@ -289,12 +289,12 @@ def create_modules_dir(args: argparse.Namespace) -> None:
                 if os.path.islink(dest):
                     raise ValueError(
                         "{} already exists, and is linked to {}. Cannot link to {}".format(
-                            dest, os.readlink(dest), target
-                        )
+                            dest, os.readlink(dest), target,
+                        ),
                     )
                 else:
                     raise ValueError(
-                        "{} already exists. Cannot link to {}".format(dest, target)
+                        "{} already exists. Cannot link to {}".format(dest, target),
                     )
             else:
                 raise

@@ -22,7 +22,7 @@ class jll_artifact:
         rel_path_to_json = pathlib.Path(*pathlib.Path(artifact_entry[1]).parts[1:])
         rel_path_of_binary = artifact_entry[2]
         self.artifacts_path = os.path.join(
-            json_path, rel_path_to_json, rel_path_of_binary
+            json_path, rel_path_to_json, rel_path_of_binary,
         )
 
     def form_artifact_dependency(self):
