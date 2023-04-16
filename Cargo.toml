@@ -8,8 +8,8 @@ members = [
     "crates/lib/driver",
     "crates/lib/utils",
     "crates/lib/watch",
-    "crates/bin/syntax",
     "crates/bin/bkg",
+    "crates/bin/rudolph",
 ]
 
 [workspace.package]
@@ -212,6 +212,7 @@ pin-project = "1.0.12"
 plist = "1.4.3"
 pretty_assertions = "1.2.1"
 pretty_assertions_sorted = "1.2.1"
+pretty-hex = "0.3.0"
 proc-macro2 = "1.0.51"
 prost = "0.11.6"
 # prost-build = "0.11.6"

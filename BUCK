@@ -6,8 +6,8 @@ alias(
 )
 
 alias(
-    name = "syntax",
-    actual = "//crates/bin/syntax:syntax",
+    name = "rudolph",
+    actual = "//crates/bin/rudolph:rudolph",
 )
 
 # load("//:test_utils.bzl", "assert_file_contains")

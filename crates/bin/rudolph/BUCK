@@ -1,0 +1,12 @@
+rust_binary(
+    name = "rudolph",
+    srcs = glob(["src/**/*.rs"]) + ["reindeer"],
+    edition = "2021",
+    deps = [
+        "//third-party:anyhow",
+        "//third-party:owo-colors",
+        "//third-party:tracing",
+        "//third-party:tracing-subscriber",
+    ],
+    visibility = ["PUBLIC"],
+)

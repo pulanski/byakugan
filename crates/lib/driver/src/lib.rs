@@ -1,5 +1,6 @@
 pub mod build_tools;
 
+use build_tools::BuildSystem;
 use cfg::settings::byakugan;
 use clap::Parser;
 use cli::{
@@ -41,7 +42,15 @@ pub struct Settings {
     /// [default: 1000]
     debounce_duration: Duration,
 
+    /// The command to execute when a file system event is triggered.
+    /// [default: `buck2|bazel build //...`]
     command: Box<dyn Task>,
+
+    /// The build system to use.
+    /// [default: detected from user's environment]
+    build_system: BuildSystem,
+    // Signals channel for the current process
+    // signals: signals::Signals,
 }
 
 impl Byakugan {
@@ -70,9 +79,18 @@ impl Byakugan {
         log::init(command.verbosity())?;
         tracing::info!("{} is running", byakugan());
 
+        // If the user specified a subcommand, then use that
+        // otherwise, use the default subcommand `build`.
+        let subcommand = if let Some(subcommand) = command.subcommand() {
+            tracing::debug!("Subcommand specified: {}", subcommand);
+            subcommand.clone()
+        } else {
+            tracing::debug!("No subcommand specified, using default: build");
+            Command::Build(Default::default())
+        };
+
         // Determine the build system to use.
-        let subcommand = command.subcommand();
-        let build_system = build_tools::detect_build_system(&cli::str(subcommand))?;
+        let build_system = build_tools::detect_build_system(&cli::str(&subcommand))?;
         tracing::info!("Build system detected: {build_system}");
 
         // Ensure that the build system is executable (i.e. it exists in the PATH)
@@ -80,12 +98,12 @@ impl Byakugan {
 
         // Use the build system to validate that the targets are valid (i.e. they all
         // exist) and determine the task to invoke in watch mode.
-        build_tools::validate_targets(command.subcommand(), build_system)?;
+        build_tools::validate_targets(&subcommand, build_system)?;
 
         // From this point on, we can assume that the build system is installed and
         // that the targets are valid, so we can safely execute the task.
 
-        match command.subcommand() {
+        match subcommand {
             Command::Build(args) => {
                 tracing::info!(
                     "Canonical command issued in {} mode: {}{} {}{}",

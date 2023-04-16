@@ -1,5 +1,7 @@
 mod flags;
 
+use std::fmt;
+
 use cfg::settings::{
     byakugan,
     LogLevel,
@@ -19,7 +21,7 @@ use smartstring::alias::String;
 
 /// **Command line interface** for **Byakugan**, a Rust-based file system
 /// watcher written for Starlark-based build systems.
-#[derive(Parser, Debug, Display, Getters, PartialEq, Eq, Hash)]
+#[derive(Parser, Debug, Getters, PartialEq, Eq, Hash)]
 #[command(
     author = EXE_AUTHOR,
     version = EXE_VERSION,
@@ -30,16 +32,31 @@ Byakugan is specifically designed to work with Starlark-based build systems like
     bin_name = EXE_NAME,
 )]
 #[getset(get = "pub")]
-#[display(fmt = "{} {subcommand}", "byakugan()")]
+// if subcommand is some, then display subcommand, otherwise display just
+// byakugan #[display(
+//     fmt = "{} {}",
+//     "byakugan()",
+//     "subcommand.as_ref().map(|s| s.to_string()).unwrap_or_else(||
+// "".to_owned()).to_string()" )]
 pub struct ByakuganCli {
     /// The subcommand to execute
     #[clap(subcommand)]
-    subcommand: Command,
+    subcommand: Option<Command>,
 
     /// The verbosity level to use for logging
     /// [default: info]
     #[clap(short = 'v', long, required = false, value_enum, default_value = "info")]
     pub verbosity: LogLevel,
+}
+
+impl fmt::Display for ByakuganCli {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{EXE_NAME}")?;
+        match &self.subcommand {
+            Some(subcommand) => write!(f, " {subcommand}"),
+            None => Ok(()),
+        }
+    }
 }
 
 #[derive(Subcommand, Debug, Display, Clone, PartialEq, Eq, Hash)]
@@ -68,14 +85,20 @@ pub fn str(cmd: &Command) -> String {
     }
 }
 
-#[derive(Args, Debug, Default, Display, Clone, PartialEq, Eq, Hash, Getters)]
+#[derive(Args, Debug, Display, Clone, PartialEq, Eq, Hash, Getters)]
 #[getset(get = "pub")]
 #[display(fmt = "build {}", "targets.join(\" \")")]
 pub struct Build {
     /// The targets to build (e.g. `//backend/go/web-server:web-server` or
     /// `//...`)
-    #[arg(required = true)]
+    #[arg(required = false, default_value = "//...")]
     pub targets: Vec<String>,
+}
+
+impl Default for Build {
+    fn default() -> Self {
+        Self { targets: vec!["//...".to_owned().into()] }
+    }
 }
 
 #[derive(Args, Debug, Default, Display, Clone, PartialEq, Eq, Hash, Getters)]
@@ -93,7 +116,7 @@ pub struct Run {
 pub struct Test {
     /// The targets to test (e.g. `//backend/go/web-server:web-server` or
     /// `//...`)
-    #[arg(required = true)]
+    #[arg(required = false, default_value = "//...")]
     pub targets: Vec<String>,
 }
 

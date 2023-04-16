@@ -1,0 +1,17 @@
+[package]
+name = "syntax"
+version = "0.1.0"
+edition = "2021"
+authors = ["pulanski"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+watch = { path = "../../lib/watch" }
+utils = { path = "../../lib/utils" }
+
+anyhow = { workspace = true }
+# humansize = { workspace = true }
+owo-colors = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
