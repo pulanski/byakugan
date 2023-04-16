@@ -1,5 +1,7 @@
 use miette::Result;
 
+use super::is_binary_installed;
+
 pub mod query {
     use miette::IntoDiagnostic;
 
@@ -12,10 +14,7 @@ pub mod query {
     ///
     /// A list of all build targets in the current workspace/cell.
     pub fn all_targets() -> Result<Vec<String>> {
-        // pub async fn all_targets() -> Result<Vec<String>> { // TODO: in the future,
-        // make async TODO: in the future, convert this to a Result<Vec<Target>>
-        // where Target is a struct that contains target information (e.g.
-        // label, rule, etc.)
+        // pub fn all_targets() -> Result<Vec<Target>> { // TODO:
         tracing::debug!("Querying all build targets in the current workspace/cell...");
 
         let output = std::process::Command::new("buck2")
@@ -47,7 +46,12 @@ pub mod query {
     }
 }
 
+/// Check if `buck` or `buck2` is installed and available on the `PATH`.
+///
+/// **NOTE**: This operation is cached between runs of the program, meaning that
+/// the first time this function is called, it will be a blocking operation
+/// performed at runtime, however from that point on, it will be a fast lookup
+/// operation reading from a cached value.
 pub fn is_installed() -> bool {
-    std::process::Command::new("buck2").arg("--version").output().is_ok() ||
-        std::process::Command::new("buck").arg("--version").output().is_ok()
+    is_binary_installed("buck") || is_binary_installed("buck2")
 }

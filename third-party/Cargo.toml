@@ -136,6 +136,7 @@ indoc = "2.0.0"
 # internment = { version = "0.7", features = ["arc"] }
 inventory = "0.3.5"
 is_proc_translated = "0.1.1"
+# is-terminal = "0.4.7"
 itertools = "0.10.5"
 itoa = "1.0.6"
 jemalloc-ctl = "0.5.0"
@@ -160,6 +161,7 @@ memchr = "2.4.1"
 # memmap2 = "0.5.0"
 memoffset = "0.8.0"
 miette = "5.5.0"
+# miette = { version = "5.5.0", features = ["fancy"] }
 # miette = { version = "5.5.0", features = ["fancy"] } // TODO: try and get fancy working (currently having issues w/ gen_srcs)
 mimalloc = { version = "0.1.29", default-features = false }
 mime = "0.3.16"
@@ -224,7 +226,7 @@ rstest = "0.17.0"
 rustc-hash = "1.1.0"
 # rust-i18n = "1.1.1"
 rustc-serialize = "0.3.24"
-# rustix = "0.37.11"
+rustix = "0.0.0"
 # rusqlite = "0.29.0"
 # salsa = { git = "https://github.com/salsa-rs/salsa", package = "salsa-2022" }
 # scip = "0.1.1"
@@ -282,6 +284,9 @@ termios = "0.3"
 test-case = "3.1.0"
 # test-context = "0.1.4"
 text-size = "1.1.0"
+textwrap = { version = "0.14.0", default-features = false, features = [
+    "unicode-width",
+] }
 # textwrap = { version = "0.11", features = ["term_size"] }
 # error[E0658]: use of unstable library feature 'rustc_private': this crate is being loaded from the sysroot, an unstable location; did you mean to load this crate from crates.io via `Cargo.toml` instead?
 #    --> third-party/vendor/term_size-0.3.2/src/platform/unix.rs:171:15
@@ -321,6 +326,7 @@ typed-builder = "0.14.0"
 ulid = "1.0.0"
 ungrammar = "1.16.1"
 unicode-segmentation = "1.7"
+unicode-width = "0.1.9"
 url = "2.3.1"
 uuid = { version = "1.3.0", features = [
     # "v4", # Lets you generate random UUIDs

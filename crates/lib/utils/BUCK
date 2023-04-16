@@ -22,10 +22,15 @@ rust_library(
         "//third-party:serde",
         "//third-party:shrinkwraprs",
         "//third-party:smartstring",
+        "//third-party:textwrap",
         "//third-party:tracing",
         "//third-party:tracing-subscriber",
         "//third-party:typed-builder",
+        "//third-party:unicode-width",
         "//third-party:whoami",
+    ],
+    features = [
+        "is_terminal",
     ],
     visibility = ["PUBLIC"],
 )

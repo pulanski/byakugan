@@ -3,33 +3,30 @@ mod buck2;
 mod cargo;
 
 use std::{
+    collections::BinaryHeap,
     env,
+    fs,
     path::{
         Path,
         PathBuf,
     },
+    process::Command,
 };
 
 use super::label::Label;
-use cli::{
-    Build,
-    Run,
-    Test,
-};
 use derivative::Derivative;
 use derive_more::Display;
 use diagnostics::errors::{
-    CliError::{
-        self,
-        NoBuildSystemDetected,
-    },
+    CliError::NoBuildSystemDetected,
     ToolchainError,
 };
+use dirs_next::cache_dir;
 use getset::{
     Getters,
     MutGetters,
     Setters,
 };
+use miette::miette;
 use miette::{
     IntoDiagnostic,
     Report,
@@ -39,17 +36,18 @@ use miette::{
 use owo_colors::OwoColorize;
 use shrinkwraprs::Shrinkwrap;
 use smartstring::alias::String;
+use strsim::levenshtein;
 use typed_builder::TypedBuilder;
 
-fn buck2() -> String {
+pub fn buck2() -> String {
     "buck2".bright_yellow().bold().to_string().into()
 }
 
-fn bazel() -> String {
+pub fn bazel() -> String {
     "bazel".bright_green().bold().to_string().into()
 }
 
-fn cargo() -> String {
+pub fn cargo() -> String {
     "cargo".yellow().bold().to_string().into()
 }
 
@@ -146,13 +144,14 @@ impl TargetSet {
     /// within the dependency graph of the build system.
     pub fn get_target(&self, cmd: &str, label: &Label) -> Result<&Target> {
         // TODO: in the future, calculate the span of the label in the command correctly
-        self.targets.iter().find(|target| target.label() == label).ok_or_else(|| {
-            Report::new(CliError::TargetNotFound {
-                command: cmd.to_string(),
-                target:  label.to_string().into(),
-                span:    SourceSpan::new(0.into(), label.to_string().len().into()),
-            })
-        })
+        // self.targets.iter().find(|target| target.label() == label).ok_or_else(|| {
+        //     Report::new(CliError::TargetNotFound {
+        //         command: cmd.to_string(),
+        //         target:  label.to_string().into(),
+        //         span:    SourceSpan::new(0.into(), label.to_string().len().into()),
+        //     })
+        // })
+        todo!()
     }
 }
 
@@ -297,13 +296,138 @@ pub(crate) fn validate_targets(subcommand: &cli::Command, build_system: BuildSys
             match subcommand {
                 cli::Command::Build(cli::Build { targets }) |
                 cli::Command::Test(cli::Test { targets }) => {
-                    let requested_targets = TargetSet::from(targets.clone());
-                    tracing::debug!("Validating targets: {}", requested_targets);
-                    // for target in targets {
-                    //     if !all_targets.contains(target) {
-                    //         return Err(InvalidTarget { target:
-                    // target.to_string() })
-                    // .into_diagnostic();     }
+                    // TODO:
+                    // let requested_targets = TargetSet::from(targets.clone());
+                    // tracing::debug!("Validating targets: {}",
+                    // requested_targets);
+
+                    // temporary workaround
+                    if targets.len() == 1 && targets[0] == "//..." {
+                        tracing::debug!("All targets requested...");
+                        return Ok(());
+                    }
+
+                    let mut did_you_mean = BinaryHeap::new();
+                    let mut invalid_targets = Vec::new();
+
+                    for target in targets {
+                        tracing::debug!(
+                            "Validating target: {}",
+                            &target.trim().to_string().yellow()
+                        );
+
+                        let all_targets = all_targets
+                            .iter()
+                            .map(|t| t.split("//").collect::<Vec<&str>>())
+                            .map(|t| t[t.len() - 1])
+                            .collect::<Vec<&str>>();
+
+                        let target = if target.contains("//") {
+                            // get the last part of the target
+                            let target = target.split("//").collect::<Vec<&str>>();
+                            target[target.len() - 1]
+                        } else {
+                            target
+                        };
+
+                        if !all_targets.contains(&target.trim().to_string().as_str())
+                        // if !all_targets.contains(&target.trim().to_string()) ||
+                        //     // or all targets split // is not in the list
+                        //     // TODO:
+                        {
+                            invalid_targets.push(target.trim().to_string());
+                            tracing::debug!("Invalid target: {}", &target.trim().to_string().red());
+                            // Find the top 5 closest matches to the invalid target using
+                            // Levenshtein distance
+                            for valid_target in all_targets {
+                                let distance = levenshtein(target, valid_target);
+                                tracing::trace!(
+                                    "Distance between '{}' and '{}' is {}",
+                                    target,
+                                    valid_target,
+                                    distance
+                                );
+                                if did_you_mean.len() < 5 {
+                                    tracing::trace!("Pushing to heap");
+                                    did_you_mean.push((distance, valid_target));
+                                } else if let Some((current_max_distance, _)) = did_you_mean.peek()
+                                {
+                                    if distance < *current_max_distance {
+                                        tracing::trace!(
+                                            "Found a closer match, popping top of heap and \
+                                             pushing new match"
+                                        );
+                                        did_you_mean.pop();
+                                        did_you_mean.push((distance, valid_target));
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Construct the DidYouMean error message with the top 5
+                    // closest matches
+                    let mut closest_matches = vec![];
+                    while let Some((_, target)) = did_you_mean.pop() {
+                        closest_matches.push(target);
+                    }
+                    closest_matches.reverse();
+
+                    if !invalid_targets.is_empty() {
+                        println!(
+                            "\n{}\n",
+                            "Did you mean one of the following targets instead?".blue()
+                        );
+                        for closest_match in &closest_matches {
+                            println!("  {}", closest_match.green());
+                        }
+                        println!();
+
+                        return Err(miette!(
+                            "Invalid target(s) specified\n\n{}",
+                            invalid_targets
+                                .iter()
+                                .map(|t| t.yellow().italic().to_string())
+                                .collect::<Vec<_>>()
+                                .join(&",\n".yellow().italic().to_string())
+                        ));
+                    }
+
+                    // TODO: refactor to this in future potentially, when fancy
+                    // feature in miette works properly for
+                    // buck2
+
+                    // if invalid_target_count > 0 {
+                    //     if invalid_target_count == 1 {
+                    //         return Err(TargetNotFound {
+                    //             command:      subcommand.to_string(),
+                    //             target:       targets[0].to_string().into(),
+                    //             did_you_mean: closest_matches
+                    //                 .into_iter()
+                    //                 .map(|t| t.to_string())
+                    //                 .collect(),
+                    //             span:         SourceSpan::new(
+                    //                 0.into(),
+                    //                 subcommand.to_string().len().into(),
+                    //             ),
+                    //         })
+                    //         .into_diagnostic();
+                    //     } else {
+                    //         return Err(TargetsNotFound {
+                    //             targets:      targets.iter().map(|t|
+                    // t.to_string()).collect(),
+                    // command:      subcommand.to_string(),
+                    //             span:         SourceSpan::new(
+                    //                 0.into(),
+                    //                 subcommand.to_string().len().into(),
+                    //             ),
+                    //             did_you_mean: closest_matches
+                    //                 .into_iter()
+                    //                 .map(|t| t.to_string())
+                    //                 .collect(),
+                    //         })
+                    //         .into_diagnostic();
+                    //     }
                     // }
                 }
                 cli::Command::Run(cli::Run { target }) => {
@@ -361,4 +485,104 @@ pub(crate) fn ensure_build_system_executable(build_system: BuildSystem) -> Resul
             }
         }
     }
+}
+
+/// Check if the given binary is installed and available on the `PATH`.
+pub fn is_binary_installed(binary: &str) -> bool {
+    // Check to see if a cached value exists for this check
+    if let Some(is_installed) = cached_binary_install(binary) {
+        if is_installed {
+            tracing::debug!("Found cached {} install, skipping runtime check", binary);
+            return true;
+        }
+    }
+
+    // At this point, we know that the cached value is either not set or is set
+    // to false. We need to check if the binary is installed and available on the
+    // `PATH`.
+
+    let is_installed = check_binary_install(binary);
+
+    // Update the cache with the result of the check
+    update_binary_install_cache(binary, is_installed)
+        .expect("Unable to update binary install cache");
+
+    is_installed
+}
+
+fn update_binary_install_cache(binary: &str, is_installed: bool) -> Result<()> {
+    let install_cache_path = binary_install_cache_path(binary);
+
+    if let Some(parent) = install_cache_path.parent() {
+        if !parent.exists() {
+            fs::create_dir_all(parent).into_diagnostic()?;
+        }
+    }
+
+    if !install_cache_path.exists() {
+        // Cache file does not exist, so we need to create it
+        match create_binary_install_cache(binary) {
+            Ok(_) => {
+                tracing::debug!("Created {} install cache file", binary);
+            }
+            Err(e) => {
+                tracing::warn!("Unable to create bazel install cache file: {}", e);
+                return Err(e);
+            }
+        }
+    }
+
+    fs::write(&install_cache_path, is_installed.to_string()).into_diagnostic().map(|_| ())
+}
+
+fn check_binary_install(binary: &str) -> bool {
+    Command::new(binary).arg("--version").output().is_ok()
+}
+
+fn cached_binary_install(binary: &str) -> Option<bool> {
+    let install_cache_path = binary_install_cache_path(binary);
+
+    if install_cache_path.exists() {
+        if let Ok(install_cache) = fs::read_to_string(&install_cache_path) {
+            if let Ok(is_installed) = install_cache.parse::<bool>() {
+                return Some(is_installed);
+            }
+        }
+
+        tracing::warn!("Unable to read cached binary install value for {}, removing cache", binary);
+        fs::remove_file(&install_cache_path).expect("Unable to remove binary install cache");
+        None
+    } else {
+        // Cache file does not exist, so we need to create it
+        match create_binary_install_cache(binary) {
+            Ok(_) => Some(false),
+            Err(e) => {
+                tracing::warn!("Unable to create binary install cache: {}", e);
+                None
+            }
+        }
+    }
+}
+
+fn create_binary_install_cache(binary: &str) -> Result<()> {
+    let install_cache_path = binary_install_cache_path(binary);
+
+    // Create the cache directory if it does not exist
+    if let Some(parent) = install_cache_path.parent() {
+        if !parent.exists() {
+            fs::create_dir_all(parent).into_diagnostic()?;
+        }
+    }
+
+    if !install_cache_path.exists() {
+        fs::File::create(&install_cache_path).into_diagnostic()?;
+    }
+
+    Ok(())
+}
+
+fn binary_install_cache_path(binary_name: &str) -> PathBuf {
+    let cache_dir = cache_dir().expect("Unable to determine cache directory");
+
+    cache_dir.join("byakugan").join(format!("{binary_name}.installed"))
 }

@@ -2315,6 +2315,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustix"
+version = "0.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7d02bc2624e2b3beb4765878e67af80fe3627c12690adcf5d3dff3d17faa909c"
+
+[[package]]
 name = "ryu"
 version = "1.0.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2710,6 +2716,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "288cb548dbe72b652243ea797201f3d481a0609a967980fcc5b2315ea811560a"
 
 [[package]]
+name = "textwrap"
+version = "0.14.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0066c8d12af8b5acd21e00547c3797fde4e8677254a7ee429176ccebbe93dd80"
+dependencies = [
+ "unicode-width",
+]
+
+[[package]]
 name = "third-party"
 version = "0.0.0"
 dependencies = [
@@ -2856,6 +2871,7 @@ dependencies = [
  "rstest",
  "rustc-hash",
  "rustc-serialize",
+ "rustix",
  "scoped-tls",
  "scopeguard",
  "semver",
@@ -2888,6 +2904,7 @@ dependencies = [
  "termios",
  "test-case",
  "text-size",
+ "textwrap",
  "thiserror",
  "tinyvec",
  "toml",
@@ -2903,6 +2920,7 @@ dependencies = [
  "ulid",
  "ungrammar",
  "unicode-segmentation",
+ "unicode-width",
  "url",
  "uuid",
  "walkdir",

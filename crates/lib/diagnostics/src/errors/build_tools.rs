@@ -1,9 +1,5 @@
-use miette::{
-    Diagnostic,
-    SourceSpan,
-};
+use miette::Diagnostic;
 use owo_colors::OwoColorize;
-use smol_str::SmolStr;
 use thiserror::Error;
 
 /// Prefix appended to all `ToolchainError` diagnostics.

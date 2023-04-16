@@ -303,6 +303,9 @@ termios = "0.3"
 test-case = "3.1.0"
 # test-context = "0.1.4"
 text-size = "1.1.0"
+textwrap = { version = "0.14.0", default-features = false, features = [
+    "unicode-width",
+] }
 # textwrap = { version = "0.11", features = ["term_size"] }
 # error[E0658]: use of unstable library feature 'rustc_private': this crate is being loaded from the sysroot, an unstable location; did you mean to load this crate from crates.io via `Cargo.toml` instead?
 #    --> third-party/vendor/term_size-0.3.2/src/platform/unix.rs:171:15
@@ -342,6 +345,7 @@ typed-builder = "0.14.0"
 ulid = "1.0.0"
 ungrammar = "1.16.1"
 unicode-segmentation = "1.7"
+unicode-width = "0.1.9"
 url = "2.3.1"
 uuid = { version = "1.3.0", features = [
     # "v4", # Lets you generate random UUIDs

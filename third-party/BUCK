@@ -8116,6 +8116,22 @@ third_party_rust_library(
     deps = [":semver-1.0.17"],
 )
 
+alias(
+    name = "rustix",
+    actual = ":rustix-0.0.0",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "rustix-0.0.0",
+    srcs = ["vendor/rustix-0.0.0/src/lib.rs"],
+    crate = "rustix",
+    crate_root = "vendor/rustix-0.0.0/src/lib.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+)
+
 third_party_rust_library(
     name = "ryu-1.0.13",
     srcs = [
@@ -9704,6 +9720,32 @@ third_party_rust_library(
 )
 
 alias(
+    name = "textwrap",
+    actual = ":textwrap-0.14.2",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "textwrap-0.14.2",
+    srcs = [
+        "vendor/textwrap-0.14.2/src/core.rs",
+        "vendor/textwrap-0.14.2/src/indentation.rs",
+        "vendor/textwrap-0.14.2/src/lib.rs",
+        "vendor/textwrap-0.14.2/src/word_separators.rs",
+        "vendor/textwrap-0.14.2/src/word_splitters.rs",
+        "vendor/textwrap-0.14.2/src/wrap_algorithms.rs",
+        "vendor/textwrap-0.14.2/src/wrap_algorithms/optimal_fit.rs",
+    ],
+    crate = "textwrap",
+    crate_root = "vendor/textwrap-0.14.2/src/lib.rs",
+    edition = "2018",
+    features = ["unicode-width"],
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [":unicode-width-0.1.10"],
+)
+
+alias(
     name = "thiserror",
     actual = ":thiserror-1.0.40",
     visibility = ["PUBLIC"],
@@ -10727,6 +10769,12 @@ third_party_rust_library(
     edition = "2018",
     rustc_flags = ["--cap-lints=allow"],
     visibility = [],
+)
+
+alias(
+    name = "unicode-width",
+    actual = ":unicode-width-0.1.10",
+    visibility = ["PUBLIC"],
 )
 
 third_party_rust_library(

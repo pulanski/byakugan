@@ -16,6 +16,7 @@ clap = { workspace = true }
 derivative = { workspace = true }
 derive_more = { workspace = true }
 derive-new = { workspace = true }
+dirs-next = { workspace = true }
 getset = { workspace = true }
 lazy_static = { workspace = true }
 miette = { workspace = true }
@@ -24,6 +25,7 @@ pretty_assertions_sorted = { workspace = true }
 regex = { workspace = true }
 shrinkwraprs = { workspace = true }
 smartstring = { workspace = true }
+strsim = { workspace = true }
 strum_macros = { workspace = true }
 tracing = { workspace = true }
 typed-builder = { workspace = true }

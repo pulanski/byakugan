@@ -1,8 +1,7 @@
 pub mod build_tools;
-use build_tools::context::build;
-use clap::Parser;
 
 use cfg::settings::byakugan;
+use clap::Parser;
 use cli::{
     ByakuganCli,
     Command,
@@ -14,6 +13,7 @@ use getset::{
     Setters,
 };
 use miette::Result;
+use owo_colors::OwoColorize;
 use shrinkwraprs::Shrinkwrap;
 use std::{
     process::ExitCode,
@@ -22,6 +22,8 @@ use std::{
 use typed_builder::TypedBuilder;
 use utils::log;
 use watch::Task;
+
+use crate::build_tools::buck2;
 
 /// State of watching a file system for changes.
 #[derive(Debug, Clone, Display, Getters, MutGetters, Setters, TypedBuilder, Shrinkwrap)]
@@ -80,17 +82,28 @@ impl Byakugan {
         // exist) and determine the task to invoke in watch mode.
         build_tools::validate_targets(command.subcommand(), build_system)?;
 
-        // if valid_targets.is_empty() {
-        //     tracing::warn!("No valid targets were found");
-        //     return Ok(ExitCode::SUCCESS);
-        // }
+        // From this point on, we can assume that the build system is installed and
+        // that the targets are valid, so we can safely execute the task.
 
         match command.subcommand() {
             Command::Build(args) => {
                 tracing::info!(
-                    "Executing build command for {} given targets {:?}",
-                    build_system,
+                    "Canonical command issued in {} mode: {}{} {}{}",
+                    "WATCH".red().bold(),
+                    "`".red(),
+                    buck2(),
+                    args,
+                    "`".red()
+                );
+                tracing::info!(
+                    "A {} mode build will be triggered anytime the transitive dependency\n\t      \
+                     closure (tset) formed by the following targets changes:\n\n\t\t{}",
+                    "WATCH".red().bold(),
                     args.targets()
+                        .iter()
+                        .map(|t| t.yellow().italic().to_string())
+                        .collect::<Vec<_>>()
+                        .join(&",\n\t\t".yellow().italic().to_string())
                 );
                 // watch::watch(build::ctx(args))?;
             }

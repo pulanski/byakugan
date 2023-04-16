@@ -15,7 +15,8 @@ env:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os }} / buck2
     steps:
       - name: Set up Rust ${{ env.RUST_TOOLCHAIN }}
         uses: actions-rs/toolchain@v1
