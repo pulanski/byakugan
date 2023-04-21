@@ -1,0 +1,30 @@
+[package]
+name = "pb3"
+version = "0.1.0"
+edition = "2021"
+authors = ["pulanski"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# crossbeam = "0.8"
+# crossterm = "0.22"
+# indicatif = "0.17"
+# rayon = "1.5"
+# serde = { version = "1", features = ["derive"] }
+# serde_json = "1"
+# tokio = { version = "1", features = ["full"] }
+# tracing = "0.1"
+# tracing-subscriber = "0.2"
+
+clap = { workspace = true }
+crossbeam = { workspace = true }
+crossterm = { workspace = true }
+indicatif = { workspace = true }
+miette = { workspace = true }
+# rayon = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }

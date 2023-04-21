@@ -1,5 +1,5 @@
 [package]
-name = "rudolph"
+name = "pb"
 version = "0.1.0"
 edition = "2021"
 authors = ["pulanski"]
@@ -7,22 +7,21 @@ authors = ["pulanski"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cfg = { path = "../../lib/cfg" }
+driver = { path = "../../lib/driver" }
 utils = { path = "../../lib/utils" }
+watch = { path = "../../lib/watch" }
 
-anyhow = { workspace = true }
-cargo_toml = { workspace = true }
-clap = { workspace = true }
 derive_more = { workspace = true }
-dirs-next = { workspace = true }
-fxhash = { workspace = true }
-getset = { workspace = true }
-humansize = { workspace = true }
+futures = { workspace = true }
+indicatif = { workspace = true }
+lazy_static = { workspace = true }
+miette = { workspace = true }
 owo-colors = { workspace = true }
+progress = { workspace = true }
 rand = { workspace = true }
-redis = { workspace = true }
 smartstring = { workspace = true }
-thiserror = { workspace = true }
+tokio = { workspace = true }
 tracing = { workspace = true }
+tracing-indicatif = { workspace = true }
 tracing-subscriber = { workspace = true }
-typed-builder = { workspace = true }
+ulid = { workspace = true }

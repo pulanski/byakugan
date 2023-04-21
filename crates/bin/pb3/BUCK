@@ -1,0 +1,19 @@
+rust_binary(
+    name = "pb3",
+    srcs = glob(["src/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        "//third-party:clap",
+        "//third-party:crossbeam",
+"//third-party:crossterm",
+"//third-party:indicatif",
+"//third-party:miette",
+# rayon = { workspace = true }
+"//third-party:serde",
+"//third-party:serde_json",
+"//third-party:tokio",
+"//third-party:tracing",
+"//third-party:tracing-subscriber",
+    ],
+    visibility = ["PUBLIC"],
+)

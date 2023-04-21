@@ -10,6 +10,21 @@ alias(
     actual = "//crates/bin/rudolph:rudolph",
 )
 
+alias(
+    name = "pb",
+    actual = "//crates/bin/pb:pb",
+)
+
+alias(
+    name = "pb2",
+    actual = "//crates/bin/pb2:pb2",
+)
+
+alias(
+    name = "pb3",
+    actual = "//crates/bin/pb3:pb3",
+)
+
 # load("//:test_utils.bzl", "assert_file_contains")
 
 # assert_file_contains(

@@ -1,0 +1,21 @@
+rust_binary(
+    name = "pb",
+    srcs = glob(["src/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        "//third-party:derive_more",
+        "//third-party:futures",
+        "//third-party:indicatif",
+        "//third-party:lazy_static",
+        "//third-party:miette",
+        "//third-party:owo-colors",
+        "//third-party:rand",
+        "//third-party:smartstring",
+        "//third-party:tokio",
+        "//third-party:tracing",
+        "//third-party:tracing-indicatif",
+        "//third-party:tracing-subscriber",
+        "//third-party:ulid",
+    ],
+    visibility = ["PUBLIC"],
+)

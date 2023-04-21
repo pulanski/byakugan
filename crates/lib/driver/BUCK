@@ -14,6 +14,7 @@ rust_library(
         "//third-party:derive-new",
         "//third-party:dirs-next",
         "//third-party:getset",
+        "//third-party:humansize",
         "//third-party:lazy_static",
         "//third-party:miette",
         "//third-party:owo-colors",

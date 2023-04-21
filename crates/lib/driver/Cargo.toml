@@ -14,10 +14,11 @@ watch = { path = "../watch" }
 
 clap = { workspace = true }
 derivative = { workspace = true }
-derive_more = { workspace = true }
 derive-new = { workspace = true }
+derive_more = { workspace = true }
 dirs-next = { workspace = true }
 getset = { workspace = true }
+humansize = { workspace = true }
 lazy_static = { workspace = true }
 miette = { workspace = true }
 owo-colors = { workspace = true }

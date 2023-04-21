@@ -9,6 +9,9 @@ members = [
     "crates/lib/utils",
     "crates/lib/watch",
     "crates/bin/bkg",
+    "crates/bin/pb",
+    "crates/bin/pb2",
+    "crates/bin/pb3",
     "crates/bin/rudolph",
 ]
 
@@ -65,6 +68,7 @@ bytes = "1.4.0"
 # cached = "0.42.0"
 cargo-emit = "0.2.1"
 cargo_metadata = "0.15.4"
+cargo_toml = "0.15.2"
 cfg-if = "1.0.0"
 chalk-solve = { version = "0.90.0", default-features = false }
 chalk-ir = "0.90.0"
@@ -95,8 +99,6 @@ crossbeam-epoch = "0.9.14"
 crossterm = { version = "0.26.1", default-features = false, features = [
     "event-stream",
 ] }
-signal-hook-mio = { version = "0.2.3", features = ["support-v0_7"] }
-signal-hook = "0.3.9"
 # cstree = "0.11.1"
 csv = "1.1"
 ctor = "0.2.0"
@@ -132,7 +134,7 @@ fork = "0.1.21"
 # fs2 = "0.4.3"
 fsevent-sys = "4.1.0"
 # fst = { version = "0.4.7", default-features = false }
-# futures = { version = "0.3.24", features = ["async-await", "compat"] }
+futures = { version = "0.3.24", features = ["async-await", "compat"] }
 # futures-intrusive = "0.5.0"
 fxhash = "0.2.1"
 gazebo = { version = "0.8.1", features = ["str_pattern_extensions"] }
@@ -148,15 +150,17 @@ home = "0.5.3"
 http = "0.2"
 httparse = "1.7.1"
 humantime = "2.1.0"
+humansize = "2.1.3"
 indenter = "0.3.3"
 indent_write = "2.2.0"
 indexmap = { version = "1.9.2", features = ["serde-1"] }
-# indicatif = "0.17.3"
+indicatif = "0.17.3"
 indoc = "2.0.0"
 # inferno = "0.11.11"
 # internment = { version = "0.7", features = ["arc"] }
 inventory = "0.3.5"
 is_proc_translated = "0.1.1"
+# is-terminal = "0.4.7"
 itertools = "0.10.5"
 itoa = "1.0.6"
 jemalloc-ctl = "0.5.0"
@@ -181,6 +185,7 @@ memchr = "2.4.1"
 # memmap2 = "0.5.0"
 memoffset = "0.8.0"
 miette = "5.5.0"
+# miette = { version = "5.5.0", features = ["fancy"] }
 # miette = { version = "5.5.0", features = ["fancy"] } // TODO: try and get fancy working (currently having issues w/ gen_srcs)
 mimalloc = { version = "0.1.29", default-features = false }
 mime = "0.3.16"
@@ -214,6 +219,7 @@ pretty_assertions = "1.2.1"
 pretty_assertions_sorted = "1.2.1"
 pretty-hex = "0.3.0"
 proc-macro2 = "1.0.51"
+progress = "0.2.0"
 prost = "0.11.6"
 # prost-build = "0.11.6"
 prost-derive = "0.11.6"
@@ -231,6 +237,7 @@ rand_xorshift = "0.3.0"
 ref-cast = "1.0.0"
 # rayon = "1.7.0"
 # reedline = { version = "0.18.0", features = ["sqlite"] }
+redis = "0.23.0"
 regex = "1.7.1"
 relative-path = { version = "1.7.0", features = ["serde"] }
 # reqwest = { version = "0.11.4", features = [
@@ -246,7 +253,7 @@ rstest = "0.17.0"
 rustc-hash = "1.1.0"
 # rust-i18n = "1.1.1"
 rustc-serialize = "0.3.24"
-# rustix = "0.37.11"
+rustix = "0.0.0"
 # rusqlite = "0.29.0"
 # salsa = { git = "https://github.com/salsa-rs/salsa", package = "salsa-2022" }
 # scip = "0.1.1"
@@ -268,6 +275,9 @@ shlex = "1.0"
 shrinkwraprs = "0.3.0"
 slab = "0.4.7"
 slog = "2.7.0"
+signal-hook-mio = { version = "0.2.3", features = ["support-v0_7"] }
+signal-hook = "0.3.9"
+signal-hook-registry = "1.4.1"
 siphasher = "0.3.3"
 smallvec = { version = "1.10", features = [
     "const_generics",
@@ -279,6 +289,7 @@ smallvec = { version = "1.10", features = [
 ] }
 smartstring = "1.0.1"
 smol_str = "0.1.24"
+socket2 = { version = "0.5.2", features = ["all"] }
 # snap = "1.1.0"
 # sorted_vector_map = "0.1"
 # starlark = "0.8.0"
@@ -287,7 +298,7 @@ strsim = "0.10.0"
 str_sim = "0.1.2"
 # structopt = "0.3.23"
 # strum = { version = "0.24", features = ["derive"] }
-strum_macros = "0.24.3"
+strum_macros = "0.19.3"
 # superconsole = "0.1.0"
 symlink = "0.1.0"
 syn = { version = "2.0.13", features = ["extra-traits", "full", "visit"] }
@@ -320,7 +331,19 @@ textwrap = { version = "0.14.0", default-features = false, features = [
 thiserror = "1.0.40"
 # threadpool = "1.8.1"
 tinyvec = "1.5.1"
-# tokio = { version = "1.5", features = ["full"] }
+tokio = { version = "1.27.0", default-features = false, features = [
+    "fs",
+    "io-util",
+    "macros",
+    "net",
+    "process",
+    "rt-multi-thread",
+    "signal",
+    "socket2",
+    "stats",
+    "sync",
+    "time",
+] }
 # tokio-stream = { version = "0.1.4", features = [
 #     "fs",
 #     "io-util",
@@ -336,6 +359,7 @@ tower = "0.4"
 tower-layer = "0.3.2"
 tower-service = "0.3.2"
 tracing = "0.1.37"
+tracing-indicatif = "0.3.0"
 tracing-log = "0.1.3"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 # tracing-tree = "0.2.1"
