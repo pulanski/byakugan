@@ -1,5 +1,5 @@
 rust_binary(
-    name = "pb",
+    name = "pb_cache",
     srcs = glob(["src/**/*.rs"]),
     edition = "2021",
     deps = [
@@ -13,6 +13,7 @@ rust_binary(
         "//third-party:miette",
         "//third-party:once_cell",
         "//third-party:owo-colors",
+        "//third-party:parking_lot",
         "//third-party:rand",
         "//third-party:shrinkwraprs",
         "//third-party:smartstring",
@@ -22,6 +23,9 @@ rust_binary(
         "//third-party:tracing-subscriber",
         "//third-party:typed-builder",
         "//third-party:ulid",
+    ],
+    rustc_flags = [
+        "--cfg=tokio_unstable",
     ],
     visibility = ["PUBLIC"],
 )

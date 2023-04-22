@@ -1,0 +1,18 @@
+rust_binary(
+    name = "incremental_salsa",
+    srcs = glob(["src/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        "//third-party:dashmap",
+        "//third-party:crossbeam-channel",
+        "//third-party:expect-test",
+        "//third-party:eyre",
+        "//third-party:futures",
+        "//third-party:notify-debouncer-mini",
+        "//third-party:parking_lot",
+        "//third-party:salsa",
+        "//third-party:salsa-macros",
+        "//third-party:tokio",
+    ],
+    visibility = ["PUBLIC"],
+)

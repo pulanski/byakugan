@@ -42,6 +42,42 @@ third_party_rust_library(
 )
 
 third_party_rust_library(
+    name = "ahash-0.7.6",
+    srcs = [
+        "vendor/ahash-0.7.6/src/aes_hash.rs",
+        "vendor/ahash-0.7.6/src/convert.rs",
+        "vendor/ahash-0.7.6/src/fallback_hash.rs",
+        "vendor/ahash-0.7.6/src/hash_map.rs",
+        "vendor/ahash-0.7.6/src/hash_quality_test.rs",
+        "vendor/ahash-0.7.6/src/hash_set.rs",
+        "vendor/ahash-0.7.6/src/lib.rs",
+        "vendor/ahash-0.7.6/src/operations.rs",
+        "vendor/ahash-0.7.6/src/random_state.rs",
+        "vendor/ahash-0.7.6/src/specialize.rs",
+    ],
+    crate = "ahash",
+    crate_root = "vendor/ahash-0.7.6/src/lib.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [":once_cell"],
+)
+
+rust_binary(
+    name = "ahash-0.7.6-build-script-build",
+    srcs = ["vendor/ahash-0.7.6/build.rs"],
+    crate = "build_script_build",
+    crate_root = "vendor/ahash-0.7.6/./build.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":once_cell",
+        ":version_check-0.9.4",
+    ],
+)
+
+third_party_rust_library(
     name = "aho-corasick-0.7.20",
     srcs = [
         "vendor/aho-corasick-0.7.20/src/ahocorasick.rs",
@@ -486,6 +522,22 @@ third_party_rust_library(
 )
 
 alias(
+    name = "arrayref",
+    actual = ":arrayref-0.3.7",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "arrayref-0.3.7",
+    srcs = ["vendor/arrayref-0.3.7/src/lib.rs"],
+    crate = "arrayref",
+    crate_root = "vendor/arrayref-0.3.7/src/lib.rs",
+    edition = "2015",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+)
+
+alias(
     name = "arrayvec",
     actual = ":arrayvec-0.7.2",
     visibility = ["PUBLIC"],
@@ -633,6 +685,16 @@ rust_binary(
     srcs = ["vendor/async-trait-0.1.68/build.rs"],
     crate = "build_script_build",
     crate_root = "vendor/async-trait-0.1.68/build.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+)
+
+third_party_rust_library(
+    name = "async_once-0.2.6",
+    srcs = ["vendor/async_once-0.2.6/src/lib.rs"],
+    crate = "async_once",
+    crate_root = "vendor/async_once-0.2.6/src/lib.rs",
     edition = "2018",
     rustc_flags = ["--cap-lints=allow"],
     visibility = [],
@@ -1091,6 +1153,93 @@ rust_binary(
         ":cc-1.0.79",
         ":pkg-config-0.3.26",
     ],
+)
+
+alias(
+    name = "cached",
+    actual = ":cached-0.43.0",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "cached-0.43.0",
+    srcs = [
+        "vendor/cached-0.43.0/src/lib.rs",
+        "vendor/cached-0.43.0/src/lru_list.rs",
+        "vendor/cached-0.43.0/src/macros.rs",
+        "vendor/cached-0.43.0/src/proc_macro.rs",
+        "vendor/cached-0.43.0/src/stores/expiring_value_cache.rs",
+        "vendor/cached-0.43.0/src/stores/mod.rs",
+        "vendor/cached-0.43.0/src/stores/redis.rs",
+        "vendor/cached-0.43.0/src/stores/sized.rs",
+        "vendor/cached-0.43.0/src/stores/timed.rs",
+        "vendor/cached-0.43.0/src/stores/timed_sized.rs",
+        "vendor/cached-0.43.0/src/stores/unbound.rs",
+    ],
+    crate = "cached",
+    crate_root = "vendor/cached-0.43.0/src/lib.rs",
+    edition = "2018",
+    features = [
+        "async",
+        "async-trait",
+        "async_once",
+        "cached_proc_macro",
+        "cached_proc_macro_types",
+        "default",
+        "futures",
+        "lazy_static",
+        "proc_macro",
+        "tokio",
+    ],
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":async-trait-0.1.68",
+        ":async_once-0.2.6",
+        ":cached_proc_macro-0.16.0",
+        ":cached_proc_macro_types-0.1.0",
+        ":futures-0.3.28",
+        ":hashbrown-0.13.2",
+        ":instant-0.1.12",
+        ":lazy_static-1.4.0",
+        ":once_cell-1.17.1",
+        ":thiserror-1.0.40",
+        ":tokio-1.27.0",
+    ],
+)
+
+third_party_rust_library(
+    name = "cached_proc_macro-0.16.0",
+    srcs = [
+        "vendor/cached_proc_macro-0.16.0/src/cached.rs",
+        "vendor/cached_proc_macro-0.16.0/src/helpers.rs",
+        "vendor/cached_proc_macro-0.16.0/src/io_cached.rs",
+        "vendor/cached_proc_macro-0.16.0/src/lib.rs",
+        "vendor/cached_proc_macro-0.16.0/src/once.rs",
+    ],
+    crate = "cached_proc_macro",
+    crate_root = "vendor/cached_proc_macro-0.16.0/src/lib.rs",
+    edition = "2018",
+    proc_macro = True,
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":cached_proc_macro_types-0.1.0",
+        ":darling-0.14.4",
+        ":proc-macro2-1.0.56",
+        ":quote-1.0.26",
+        ":syn-1.0.109",
+    ],
+)
+
+third_party_rust_library(
+    name = "cached_proc_macro_types-0.1.0",
+    srcs = ["vendor/cached_proc_macro_types-0.1.0/src/lib.rs"],
+    crate = "cached_proc_macro_types",
+    crate_root = "vendor/cached_proc_macro_types-0.1.0/src/lib.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
 )
 
 third_party_rust_library(
@@ -1666,6 +1815,29 @@ third_party_rust_library(
 )
 
 alias(
+    name = "codespan",
+    actual = ":codespan-0.11.1",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "codespan-0.11.1",
+    srcs = [
+        "vendor/codespan-0.11.1/src/file.rs",
+        "vendor/codespan-0.11.1/src/index.rs",
+        "vendor/codespan-0.11.1/src/lib.rs",
+        "vendor/codespan-0.11.1/src/location.rs",
+        "vendor/codespan-0.11.1/src/span.rs",
+    ],
+    crate = "codespan",
+    crate_root = "vendor/codespan-0.11.1/src/lib.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [":codespan-reporting-0.11.1"],
+)
+
+alias(
     name = "codespan-reporting",
     actual = ":codespan-reporting-0.11.1",
     visibility = ["PUBLIC"],
@@ -1999,6 +2171,7 @@ third_party_rust_library(
     features = [
         "crossbeam-epoch",
         "crossbeam-utils",
+        "default",
         "std",
     ],
     rustc_flags = ["--cap-lints=allow"],
@@ -2176,7 +2349,10 @@ third_party_rust_library(
         "CARGO_PKG_VERSION_MINOR": "8",
         "CARGO_PKG_VERSION_PATCH": "15",
     },
-    features = ["std"],
+    features = [
+        "default",
+        "std",
+    ],
     rustc_flags = ["--cap-lints=allow"],
     visibility = [],
     deps = [":cfg-if-1.0.0"],
@@ -2201,7 +2377,10 @@ rust_binary(
         "CARGO_PKG_VERSION_MINOR": "8",
         "CARGO_PKG_VERSION_PATCH": "15",
     },
-    features = ["std"],
+    features = [
+        "default",
+        "std",
+    ],
     rustc_flags = ["--cap-lints=allow"],
     visibility = [],
 )
@@ -2364,6 +2543,130 @@ third_party_rust_library(
 )
 
 third_party_rust_library(
+    name = "darling-0.14.4",
+    srcs = [
+        "vendor/darling-0.14.4/src/lib.rs",
+        "vendor/darling-0.14.4/src/macros_public.rs",
+    ],
+    crate = "darling",
+    crate_root = "vendor/darling-0.14.4/src/lib.rs",
+    edition = "2018",
+    features = [
+        "default",
+        "suggestions",
+    ],
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":darling_core-0.14.4",
+        ":darling_macro-0.14.4",
+    ],
+)
+
+third_party_rust_library(
+    name = "darling_core-0.14.4",
+    srcs = [
+        "vendor/darling_core-0.14.4/src/ast/data.rs",
+        "vendor/darling_core-0.14.4/src/ast/generics.rs",
+        "vendor/darling_core-0.14.4/src/ast/mod.rs",
+        "vendor/darling_core-0.14.4/src/codegen/attr_extractor.rs",
+        "vendor/darling_core-0.14.4/src/codegen/default_expr.rs",
+        "vendor/darling_core-0.14.4/src/codegen/error.rs",
+        "vendor/darling_core-0.14.4/src/codegen/field.rs",
+        "vendor/darling_core-0.14.4/src/codegen/from_attributes_impl.rs",
+        "vendor/darling_core-0.14.4/src/codegen/from_derive_impl.rs",
+        "vendor/darling_core-0.14.4/src/codegen/from_field.rs",
+        "vendor/darling_core-0.14.4/src/codegen/from_meta_impl.rs",
+        "vendor/darling_core-0.14.4/src/codegen/from_type_param.rs",
+        "vendor/darling_core-0.14.4/src/codegen/from_variant_impl.rs",
+        "vendor/darling_core-0.14.4/src/codegen/mod.rs",
+        "vendor/darling_core-0.14.4/src/codegen/outer_from_impl.rs",
+        "vendor/darling_core-0.14.4/src/codegen/postfix_transform.rs",
+        "vendor/darling_core-0.14.4/src/codegen/trait_impl.rs",
+        "vendor/darling_core-0.14.4/src/codegen/variant.rs",
+        "vendor/darling_core-0.14.4/src/codegen/variant_data.rs",
+        "vendor/darling_core-0.14.4/src/derive.rs",
+        "vendor/darling_core-0.14.4/src/error/child.rs",
+        "vendor/darling_core-0.14.4/src/error/kind.rs",
+        "vendor/darling_core-0.14.4/src/error/mod.rs",
+        "vendor/darling_core-0.14.4/src/from_attributes.rs",
+        "vendor/darling_core-0.14.4/src/from_derive_input.rs",
+        "vendor/darling_core-0.14.4/src/from_field.rs",
+        "vendor/darling_core-0.14.4/src/from_generic_param.rs",
+        "vendor/darling_core-0.14.4/src/from_generics.rs",
+        "vendor/darling_core-0.14.4/src/from_meta.rs",
+        "vendor/darling_core-0.14.4/src/from_type_param.rs",
+        "vendor/darling_core-0.14.4/src/from_variant.rs",
+        "vendor/darling_core-0.14.4/src/lib.rs",
+        "vendor/darling_core-0.14.4/src/macros_private.rs",
+        "vendor/darling_core-0.14.4/src/macros_public.rs",
+        "vendor/darling_core-0.14.4/src/options/core.rs",
+        "vendor/darling_core-0.14.4/src/options/forward_attrs.rs",
+        "vendor/darling_core-0.14.4/src/options/from_attributes.rs",
+        "vendor/darling_core-0.14.4/src/options/from_derive.rs",
+        "vendor/darling_core-0.14.4/src/options/from_field.rs",
+        "vendor/darling_core-0.14.4/src/options/from_meta.rs",
+        "vendor/darling_core-0.14.4/src/options/from_type_param.rs",
+        "vendor/darling_core-0.14.4/src/options/from_variant.rs",
+        "vendor/darling_core-0.14.4/src/options/input_field.rs",
+        "vendor/darling_core-0.14.4/src/options/input_variant.rs",
+        "vendor/darling_core-0.14.4/src/options/mod.rs",
+        "vendor/darling_core-0.14.4/src/options/outer_from.rs",
+        "vendor/darling_core-0.14.4/src/options/shape.rs",
+        "vendor/darling_core-0.14.4/src/usage/generics_ext.rs",
+        "vendor/darling_core-0.14.4/src/usage/ident_set.rs",
+        "vendor/darling_core-0.14.4/src/usage/lifetimes.rs",
+        "vendor/darling_core-0.14.4/src/usage/mod.rs",
+        "vendor/darling_core-0.14.4/src/usage/options.rs",
+        "vendor/darling_core-0.14.4/src/usage/type_params.rs",
+        "vendor/darling_core-0.14.4/src/util/flag.rs",
+        "vendor/darling_core-0.14.4/src/util/ident_string.rs",
+        "vendor/darling_core-0.14.4/src/util/ignored.rs",
+        "vendor/darling_core-0.14.4/src/util/mod.rs",
+        "vendor/darling_core-0.14.4/src/util/over_ride.rs",
+        "vendor/darling_core-0.14.4/src/util/parse_attribute.rs",
+        "vendor/darling_core-0.14.4/src/util/path_list.rs",
+        "vendor/darling_core-0.14.4/src/util/path_to_string.rs",
+        "vendor/darling_core-0.14.4/src/util/shape.rs",
+        "vendor/darling_core-0.14.4/src/util/spanned_value.rs",
+        "vendor/darling_core-0.14.4/src/util/with_original.rs",
+    ],
+    crate = "darling_core",
+    crate_root = "vendor/darling_core-0.14.4/src/lib.rs",
+    edition = "2018",
+    features = [
+        "strsim",
+        "suggestions",
+    ],
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":fnv-1.0.7",
+        ":ident_case-1.0.1",
+        ":proc-macro2-1.0.56",
+        ":quote-1.0.26",
+        ":strsim-0.10.0",
+        ":syn-1.0.109",
+    ],
+)
+
+third_party_rust_library(
+    name = "darling_macro-0.14.4",
+    srcs = ["vendor/darling_macro-0.14.4/src/lib.rs"],
+    crate = "darling_macro",
+    crate_root = "vendor/darling_macro-0.14.4/src/lib.rs",
+    edition = "2018",
+    proc_macro = True,
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":darling_core-0.14.4",
+        ":quote-1.0.26",
+        ":syn-1.0.109",
+    ],
+)
+
+third_party_rust_library(
     name = "darrentsung_debug_parser-0.3.0",
     srcs = [
         "vendor/darrentsung_debug_parser-0.3.0/src/lib.rs",
@@ -2379,6 +2682,57 @@ third_party_rust_library(
         ":html-escape-0.2.13",
         ":nom-7.1.3",
         ":ordered-float-2.10.0",
+    ],
+)
+
+alias(
+    name = "dashmap",
+    actual = ":dashmap-5.4.0",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "dashmap-5.4.0",
+    srcs = [
+        "vendor/dashmap-5.4.0/src/iter.rs",
+        "vendor/dashmap-5.4.0/src/iter_set.rs",
+        "vendor/dashmap-5.4.0/src/lib.rs",
+        "vendor/dashmap-5.4.0/src/lock.rs",
+        "vendor/dashmap-5.4.0/src/mapref/entry.rs",
+        "vendor/dashmap-5.4.0/src/mapref/mod.rs",
+        "vendor/dashmap-5.4.0/src/mapref/multiple.rs",
+        "vendor/dashmap-5.4.0/src/mapref/one.rs",
+        "vendor/dashmap-5.4.0/src/rayon/map.rs",
+        "vendor/dashmap-5.4.0/src/rayon/read_only.rs",
+        "vendor/dashmap-5.4.0/src/rayon/set.rs",
+        "vendor/dashmap-5.4.0/src/read_only.rs",
+        "vendor/dashmap-5.4.0/src/serde.rs",
+        "vendor/dashmap-5.4.0/src/set.rs",
+        "vendor/dashmap-5.4.0/src/setref/mod.rs",
+        "vendor/dashmap-5.4.0/src/setref/multiple.rs",
+        "vendor/dashmap-5.4.0/src/setref/one.rs",
+        "vendor/dashmap-5.4.0/src/t.rs",
+        "vendor/dashmap-5.4.0/src/try_result.rs",
+        "vendor/dashmap-5.4.0/src/util.rs",
+    ],
+    crate = "dashmap",
+    crate_root = "vendor/dashmap-5.4.0/src/lib.rs",
+    edition = "2018",
+    features = [
+        "raw-api",
+        "rayon",
+        "serde",
+    ],
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":cfg-if-1.0.0",
+        ":hashbrown-0.12.3",
+        ":lock_api-0.4.9",
+        ":once_cell-1.17.1",
+        ":parking_lot_core-0.9.7",
+        ":rayon-1.7.0",
+        ":serde-1.0.159",
     ],
 )
 
@@ -2934,6 +3288,57 @@ third_party_rust_library(
         ":dissimilar-1.0.6",
         ":once_cell-1.17.1",
     ],
+)
+
+alias(
+    name = "eyre",
+    actual = ":eyre-0.6.8",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "eyre-0.6.8",
+    srcs = [
+        "vendor/eyre-0.6.8/src/backtrace.rs",
+        "vendor/eyre-0.6.8/src/chain.rs",
+        "vendor/eyre-0.6.8/src/context.rs",
+        "vendor/eyre-0.6.8/src/error.rs",
+        "vendor/eyre-0.6.8/src/error/pyo3_compat.rs",
+        "vendor/eyre-0.6.8/src/fmt.rs",
+        "vendor/eyre-0.6.8/src/kind.rs",
+        "vendor/eyre-0.6.8/src/lib.rs",
+        "vendor/eyre-0.6.8/src/macros.rs",
+        "vendor/eyre-0.6.8/src/wrapper.rs",
+    ],
+    crate = "eyre",
+    crate_root = "vendor/eyre-0.6.8/src/lib.rs",
+    edition = "2018",
+    features = [
+        "auto-install",
+        "default",
+        "track-caller",
+    ],
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":indenter-0.3.3",
+        ":once_cell-1.17.1",
+    ],
+)
+
+rust_binary(
+    name = "eyre-0.6.8-build-script-build",
+    srcs = ["vendor/eyre-0.6.8/build.rs"],
+    crate = "build_script_build",
+    crate_root = "vendor/eyre-0.6.8/build.rs",
+    edition = "2018",
+    features = [
+        "auto-install",
+        "default",
+        "track-caller",
+    ],
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
 )
 
 alias(
@@ -4164,11 +4569,64 @@ third_party_rust_library(
     crate_root = "vendor/hashbrown-0.12.3/src/lib.rs",
     edition = "2021",
     features = [
+        "ahash",
+        "default",
         "inline-more",
         "raw",
     ],
     rustc_flags = ["--cap-lints=allow"],
     visibility = [],
+    deps = [":ahash-0.7.6"],
+)
+
+third_party_rust_library(
+    name = "hashbrown-0.13.2",
+    srcs = [
+        "vendor/hashbrown-0.13.2/src/external_trait_impls/mod.rs",
+        "vendor/hashbrown-0.13.2/src/external_trait_impls/rayon/helpers.rs",
+        "vendor/hashbrown-0.13.2/src/external_trait_impls/rayon/map.rs",
+        "vendor/hashbrown-0.13.2/src/external_trait_impls/rayon/mod.rs",
+        "vendor/hashbrown-0.13.2/src/external_trait_impls/rayon/raw.rs",
+        "vendor/hashbrown-0.13.2/src/external_trait_impls/rayon/set.rs",
+        "vendor/hashbrown-0.13.2/src/external_trait_impls/serde.rs",
+        "vendor/hashbrown-0.13.2/src/lib.rs",
+        "vendor/hashbrown-0.13.2/src/macros.rs",
+        "vendor/hashbrown-0.13.2/src/map.rs",
+        "vendor/hashbrown-0.13.2/src/raw/alloc.rs",
+        "vendor/hashbrown-0.13.2/src/raw/bitmask.rs",
+        "vendor/hashbrown-0.13.2/src/raw/generic.rs",
+        "vendor/hashbrown-0.13.2/src/raw/mod.rs",
+        "vendor/hashbrown-0.13.2/src/raw/sse2.rs",
+        "vendor/hashbrown-0.13.2/src/rustc_entry.rs",
+        "vendor/hashbrown-0.13.2/src/scopeguard.rs",
+        "vendor/hashbrown-0.13.2/src/set.rs",
+    ],
+    crate = "hashbrown",
+    crate_root = "vendor/hashbrown-0.13.2/src/lib.rs",
+    edition = "2021",
+    features = [
+        "inline-more",
+        "raw",
+    ],
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+)
+
+third_party_rust_library(
+    name = "hashlink-0.8.1",
+    srcs = [
+        "vendor/hashlink-0.8.1/src/lib.rs",
+        "vendor/hashlink-0.8.1/src/linked_hash_map.rs",
+        "vendor/hashlink-0.8.1/src/linked_hash_set.rs",
+        "vendor/hashlink-0.8.1/src/lru_cache.rs",
+        "vendor/hashlink-0.8.1/src/serde.rs",
+    ],
+    crate = "hashlink",
+    crate_root = "vendor/hashlink-0.8.1/src/lib.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [":hashbrown-0.12.3"],
 )
 
 third_party_rust_library(
@@ -4423,6 +4881,16 @@ third_party_rust_library(
 )
 
 third_party_rust_library(
+    name = "ident_case-1.0.1",
+    srcs = ["vendor/ident_case-1.0.1/src/lib.rs"],
+    crate = "ident_case",
+    crate_root = "vendor/ident_case-1.0.1/src/lib.rs",
+    edition = "2015",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+)
+
+third_party_rust_library(
     name = "idna-0.3.0",
     srcs = [
         "vendor/idna-0.3.0/src/lib.rs",
@@ -4589,6 +5057,21 @@ third_party_rust_library(
     proc_macro = True,
     rustc_flags = ["--cap-lints=allow"],
     visibility = [],
+)
+
+third_party_rust_library(
+    name = "instant-0.1.12",
+    srcs = [
+        "vendor/instant-0.1.12/src/lib.rs",
+        "vendor/instant-0.1.12/src/native.rs",
+        "vendor/instant-0.1.12/src/wasm.rs",
+    ],
+    crate = "instant",
+    crate_root = "vendor/instant-0.1.12/src/lib.rs",
+    edition = "2018",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [":cfg-if-1.0.0"],
 )
 
 alias(
@@ -5626,9 +6109,13 @@ third_party_rust_library(
     crate = "lock_api",
     crate_root = "vendor/lock_api-0.4.9/src/lib.rs",
     edition = "2018",
+    features = ["serde"],
     rustc_flags = ["--cap-lints=allow"],
     visibility = [],
-    deps = [":scopeguard-1.1.0"],
+    deps = [
+        ":scopeguard-1.1.0",
+        ":serde-1.0.159",
+    ],
 )
 
 rust_binary(
@@ -5637,6 +6124,7 @@ rust_binary(
     crate = "build_script_build",
     crate_root = "vendor/lock_api-0.4.9/build.rs",
     edition = "2018",
+    features = ["serde"],
     rustc_flags = ["--cap-lints=allow"],
     visibility = [],
     deps = [":autocfg-1.1.0"],
@@ -7082,6 +7570,12 @@ third_party_rust_library(
     visibility = [],
 )
 
+alias(
+    name = "parking_lot",
+    actual = ":parking_lot-0.12.1",
+    visibility = ["PUBLIC"],
+)
+
 third_party_rust_library(
     name = "parking_lot-0.12.1",
     srcs = [
@@ -7102,7 +7596,10 @@ third_party_rust_library(
     crate = "parking_lot",
     crate_root = "vendor/parking_lot-0.12.1/src/lib.rs",
     edition = "2018",
-    features = ["default"],
+    features = [
+        "default",
+        "serde",
+    ],
     rustc_flags = ["--cap-lints=allow"],
     visibility = [],
     deps = [
@@ -8290,6 +8787,172 @@ third_party_rust_library(
     deps = [":rand_core-0.6.4"],
 )
 
+third_party_rust_library(
+    name = "rayon-1.7.0",
+    srcs = [
+        "vendor/rayon-1.7.0/src/array.rs",
+        "vendor/rayon-1.7.0/src/collections/binary_heap.rs",
+        "vendor/rayon-1.7.0/src/collections/btree_map.rs",
+        "vendor/rayon-1.7.0/src/collections/btree_set.rs",
+        "vendor/rayon-1.7.0/src/collections/hash_map.rs",
+        "vendor/rayon-1.7.0/src/collections/hash_set.rs",
+        "vendor/rayon-1.7.0/src/collections/linked_list.rs",
+        "vendor/rayon-1.7.0/src/collections/mod.rs",
+        "vendor/rayon-1.7.0/src/collections/vec_deque.rs",
+        "vendor/rayon-1.7.0/src/compile_fail/cannot_collect_filtermap_data.rs",
+        "vendor/rayon-1.7.0/src/compile_fail/cannot_zip_filtered_data.rs",
+        "vendor/rayon-1.7.0/src/compile_fail/cell_par_iter.rs",
+        "vendor/rayon-1.7.0/src/compile_fail/mod.rs",
+        "vendor/rayon-1.7.0/src/compile_fail/must_use.rs",
+        "vendor/rayon-1.7.0/src/compile_fail/no_send_par_iter.rs",
+        "vendor/rayon-1.7.0/src/compile_fail/rc_par_iter.rs",
+        "vendor/rayon-1.7.0/src/delegate.rs",
+        "vendor/rayon-1.7.0/src/iter/chain.rs",
+        "vendor/rayon-1.7.0/src/iter/chunks.rs",
+        "vendor/rayon-1.7.0/src/iter/cloned.rs",
+        "vendor/rayon-1.7.0/src/iter/collect/consumer.rs",
+        "vendor/rayon-1.7.0/src/iter/collect/mod.rs",
+        "vendor/rayon-1.7.0/src/iter/collect/test.rs",
+        "vendor/rayon-1.7.0/src/iter/copied.rs",
+        "vendor/rayon-1.7.0/src/iter/empty.rs",
+        "vendor/rayon-1.7.0/src/iter/enumerate.rs",
+        "vendor/rayon-1.7.0/src/iter/extend.rs",
+        "vendor/rayon-1.7.0/src/iter/filter.rs",
+        "vendor/rayon-1.7.0/src/iter/filter_map.rs",
+        "vendor/rayon-1.7.0/src/iter/find.rs",
+        "vendor/rayon-1.7.0/src/iter/find_first_last/mod.rs",
+        "vendor/rayon-1.7.0/src/iter/find_first_last/test.rs",
+        "vendor/rayon-1.7.0/src/iter/flat_map.rs",
+        "vendor/rayon-1.7.0/src/iter/flat_map_iter.rs",
+        "vendor/rayon-1.7.0/src/iter/flatten.rs",
+        "vendor/rayon-1.7.0/src/iter/flatten_iter.rs",
+        "vendor/rayon-1.7.0/src/iter/fold.rs",
+        "vendor/rayon-1.7.0/src/iter/fold_chunks.rs",
+        "vendor/rayon-1.7.0/src/iter/fold_chunks_with.rs",
+        "vendor/rayon-1.7.0/src/iter/for_each.rs",
+        "vendor/rayon-1.7.0/src/iter/from_par_iter.rs",
+        "vendor/rayon-1.7.0/src/iter/inspect.rs",
+        "vendor/rayon-1.7.0/src/iter/interleave.rs",
+        "vendor/rayon-1.7.0/src/iter/interleave_shortest.rs",
+        "vendor/rayon-1.7.0/src/iter/intersperse.rs",
+        "vendor/rayon-1.7.0/src/iter/len.rs",
+        "vendor/rayon-1.7.0/src/iter/map.rs",
+        "vendor/rayon-1.7.0/src/iter/map_with.rs",
+        "vendor/rayon-1.7.0/src/iter/mod.rs",
+        "vendor/rayon-1.7.0/src/iter/multizip.rs",
+        "vendor/rayon-1.7.0/src/iter/noop.rs",
+        "vendor/rayon-1.7.0/src/iter/once.rs",
+        "vendor/rayon-1.7.0/src/iter/panic_fuse.rs",
+        "vendor/rayon-1.7.0/src/iter/par_bridge.rs",
+        "vendor/rayon-1.7.0/src/iter/plumbing/mod.rs",
+        "vendor/rayon-1.7.0/src/iter/positions.rs",
+        "vendor/rayon-1.7.0/src/iter/product.rs",
+        "vendor/rayon-1.7.0/src/iter/reduce.rs",
+        "vendor/rayon-1.7.0/src/iter/repeat.rs",
+        "vendor/rayon-1.7.0/src/iter/rev.rs",
+        "vendor/rayon-1.7.0/src/iter/skip.rs",
+        "vendor/rayon-1.7.0/src/iter/skip_any.rs",
+        "vendor/rayon-1.7.0/src/iter/skip_any_while.rs",
+        "vendor/rayon-1.7.0/src/iter/splitter.rs",
+        "vendor/rayon-1.7.0/src/iter/step_by.rs",
+        "vendor/rayon-1.7.0/src/iter/sum.rs",
+        "vendor/rayon-1.7.0/src/iter/take.rs",
+        "vendor/rayon-1.7.0/src/iter/take_any.rs",
+        "vendor/rayon-1.7.0/src/iter/take_any_while.rs",
+        "vendor/rayon-1.7.0/src/iter/test.rs",
+        "vendor/rayon-1.7.0/src/iter/try_fold.rs",
+        "vendor/rayon-1.7.0/src/iter/try_reduce.rs",
+        "vendor/rayon-1.7.0/src/iter/try_reduce_with.rs",
+        "vendor/rayon-1.7.0/src/iter/unzip.rs",
+        "vendor/rayon-1.7.0/src/iter/update.rs",
+        "vendor/rayon-1.7.0/src/iter/while_some.rs",
+        "vendor/rayon-1.7.0/src/iter/zip.rs",
+        "vendor/rayon-1.7.0/src/iter/zip_eq.rs",
+        "vendor/rayon-1.7.0/src/lib.rs",
+        "vendor/rayon-1.7.0/src/math.rs",
+        "vendor/rayon-1.7.0/src/option.rs",
+        "vendor/rayon-1.7.0/src/par_either.rs",
+        "vendor/rayon-1.7.0/src/prelude.rs",
+        "vendor/rayon-1.7.0/src/private.rs",
+        "vendor/rayon-1.7.0/src/range.rs",
+        "vendor/rayon-1.7.0/src/range_inclusive.rs",
+        "vendor/rayon-1.7.0/src/result.rs",
+        "vendor/rayon-1.7.0/src/slice/chunks.rs",
+        "vendor/rayon-1.7.0/src/slice/mergesort.rs",
+        "vendor/rayon-1.7.0/src/slice/mod.rs",
+        "vendor/rayon-1.7.0/src/slice/quicksort.rs",
+        "vendor/rayon-1.7.0/src/slice/rchunks.rs",
+        "vendor/rayon-1.7.0/src/slice/test.rs",
+        "vendor/rayon-1.7.0/src/split_producer.rs",
+        "vendor/rayon-1.7.0/src/str.rs",
+        "vendor/rayon-1.7.0/src/string.rs",
+        "vendor/rayon-1.7.0/src/vec.rs",
+    ],
+    crate = "rayon",
+    crate_root = "vendor/rayon-1.7.0/src/lib.rs",
+    edition = "2021",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":either-1.8.1",
+        ":rayon-core-1.11.0",
+    ],
+)
+
+third_party_rust_library(
+    name = "rayon-core-1.11.0",
+    srcs = [
+        "vendor/rayon-core-1.11.0/src/broadcast/mod.rs",
+        "vendor/rayon-core-1.11.0/src/broadcast/test.rs",
+        "vendor/rayon-core-1.11.0/src/compile_fail/mod.rs",
+        "vendor/rayon-core-1.11.0/src/compile_fail/quicksort_race1.rs",
+        "vendor/rayon-core-1.11.0/src/compile_fail/quicksort_race2.rs",
+        "vendor/rayon-core-1.11.0/src/compile_fail/quicksort_race3.rs",
+        "vendor/rayon-core-1.11.0/src/compile_fail/rc_return.rs",
+        "vendor/rayon-core-1.11.0/src/compile_fail/rc_upvar.rs",
+        "vendor/rayon-core-1.11.0/src/compile_fail/scope_join_bad.rs",
+        "vendor/rayon-core-1.11.0/src/job.rs",
+        "vendor/rayon-core-1.11.0/src/join/mod.rs",
+        "vendor/rayon-core-1.11.0/src/join/test.rs",
+        "vendor/rayon-core-1.11.0/src/latch.rs",
+        "vendor/rayon-core-1.11.0/src/lib.rs",
+        "vendor/rayon-core-1.11.0/src/log.rs",
+        "vendor/rayon-core-1.11.0/src/private.rs",
+        "vendor/rayon-core-1.11.0/src/registry.rs",
+        "vendor/rayon-core-1.11.0/src/scope/mod.rs",
+        "vendor/rayon-core-1.11.0/src/scope/test.rs",
+        "vendor/rayon-core-1.11.0/src/sleep/counters.rs",
+        "vendor/rayon-core-1.11.0/src/sleep/mod.rs",
+        "vendor/rayon-core-1.11.0/src/spawn/mod.rs",
+        "vendor/rayon-core-1.11.0/src/spawn/test.rs",
+        "vendor/rayon-core-1.11.0/src/test.rs",
+        "vendor/rayon-core-1.11.0/src/thread_pool/mod.rs",
+        "vendor/rayon-core-1.11.0/src/thread_pool/test.rs",
+        "vendor/rayon-core-1.11.0/src/unwind.rs",
+    ],
+    crate = "rayon_core",
+    crate_root = "vendor/rayon-core-1.11.0/src/lib.rs",
+    edition = "2021",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":crossbeam-channel-0.5.7",
+        ":crossbeam-deque-0.8.3",
+        ":crossbeam-utils-0.8.15",
+        ":num_cpus-1.15.0",
+    ],
+)
+
+rust_binary(
+    name = "rayon-core-1.11.0-build-script-build",
+    srcs = ["vendor/rayon-core-1.11.0/build.rs"],
+    crate = "build_script_build",
+    crate_root = "vendor/rayon-core-1.11.0/build.rs",
+    edition = "2021",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+)
+
 alias(
     name = "redis",
     actual = ":redis-0.23.0",
@@ -8759,22 +9422,6 @@ third_party_rust_library(
     deps = [":semver-1.0.17"],
 )
 
-alias(
-    name = "rustix",
-    actual = ":rustix-0.0.0",
-    visibility = ["PUBLIC"],
-)
-
-third_party_rust_library(
-    name = "rustix-0.0.0",
-    srcs = ["vendor/rustix-0.0.0/src/lib.rs"],
-    crate = "rustix",
-    crate_root = "vendor/rustix-0.0.0/src/lib.rs",
-    edition = "2018",
-    rustc_flags = ["--cap-lints=allow"],
-    visibility = [],
-)
-
 third_party_rust_library(
     name = "ryu-1.0.13",
     srcs = [
@@ -8811,6 +9458,116 @@ third_party_rust_library(
     ],
     rustc_flags = ["--cap-lints=allow"],
     visibility = [],
+)
+
+alias(
+    name = "salsa",
+    actual = ":salsa-2022-0.1.0-salsa",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "salsa-2022-0.1.0-salsa",
+    srcs = [
+        "vendor/salsa-2022-0.1.0/src/accumulator.rs",
+        "vendor/salsa-2022-0.1.0/src/cancelled.rs",
+        "vendor/salsa-2022-0.1.0/src/cycle.rs",
+        "vendor/salsa-2022-0.1.0/src/database.rs",
+        "vendor/salsa-2022-0.1.0/src/debug.rs",
+        "vendor/salsa-2022-0.1.0/src/durability.rs",
+        "vendor/salsa-2022-0.1.0/src/event.rs",
+        "vendor/salsa-2022-0.1.0/src/function.rs",
+        "vendor/salsa-2022-0.1.0/src/function/accumulated.rs",
+        "vendor/salsa-2022-0.1.0/src/function/backdate.rs",
+        "vendor/salsa-2022-0.1.0/src/function/delete.rs",
+        "vendor/salsa-2022-0.1.0/src/function/diff_outputs.rs",
+        "vendor/salsa-2022-0.1.0/src/function/execute.rs",
+        "vendor/salsa-2022-0.1.0/src/function/fetch.rs",
+        "vendor/salsa-2022-0.1.0/src/function/inputs.rs",
+        "vendor/salsa-2022-0.1.0/src/function/lru.rs",
+        "vendor/salsa-2022-0.1.0/src/function/maybe_changed_after.rs",
+        "vendor/salsa-2022-0.1.0/src/function/memo.rs",
+        "vendor/salsa-2022-0.1.0/src/function/specify.rs",
+        "vendor/salsa-2022-0.1.0/src/function/store.rs",
+        "vendor/salsa-2022-0.1.0/src/function/sync.rs",
+        "vendor/salsa-2022-0.1.0/src/hash.rs",
+        "vendor/salsa-2022-0.1.0/src/id.rs",
+        "vendor/salsa-2022-0.1.0/src/ingredient.rs",
+        "vendor/salsa-2022-0.1.0/src/ingredient_list.rs",
+        "vendor/salsa-2022-0.1.0/src/input.rs",
+        "vendor/salsa-2022-0.1.0/src/input_field.rs",
+        "vendor/salsa-2022-0.1.0/src/interned.rs",
+        "vendor/salsa-2022-0.1.0/src/jar.rs",
+        "vendor/salsa-2022-0.1.0/src/key.rs",
+        "vendor/salsa-2022-0.1.0/src/lib.rs",
+        "vendor/salsa-2022-0.1.0/src/plumbing.rs",
+        "vendor/salsa-2022-0.1.0/src/revision.rs",
+        "vendor/salsa-2022-0.1.0/src/routes.rs",
+        "vendor/salsa-2022-0.1.0/src/runtime.rs",
+        "vendor/salsa-2022-0.1.0/src/runtime/active_query.rs",
+        "vendor/salsa-2022-0.1.0/src/runtime/dependency_graph.rs",
+        "vendor/salsa-2022-0.1.0/src/runtime/local_state.rs",
+        "vendor/salsa-2022-0.1.0/src/runtime/shared_state.rs",
+        "vendor/salsa-2022-0.1.0/src/salsa_struct.rs",
+        "vendor/salsa-2022-0.1.0/src/setter.rs",
+        "vendor/salsa-2022-0.1.0/src/storage.rs",
+        "vendor/salsa-2022-0.1.0/src/tracked_struct.rs",
+    ],
+    crate = "salsa",
+    crate_root = "vendor/salsa-2022-0.1.0/src/lib.rs",
+    edition = "2021",
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":arc-swap-1.6.0",
+        ":crossbeam-0.8.2",
+        ":crossbeam-utils-0.8.15",
+        ":dashmap-5.4.0",
+        ":hashlink-0.8.1",
+        ":indexmap-1.9.3",
+        ":log-0.4.17",
+        ":parking_lot-0.12.1",
+        ":rustc-hash-1.1.0",
+        ":salsa-2022-macros-0.1.0-salsa-macros",
+        ":smallvec-1.10.0",
+    ],
+)
+
+alias(
+    name = "salsa-macros",
+    actual = ":salsa-2022-macros-0.1.0-salsa-macros",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "salsa-2022-macros-0.1.0-salsa-macros",
+    srcs = [
+        "vendor/salsa-2022-macros-0.1.0/src/accumulator.rs",
+        "vendor/salsa-2022-macros-0.1.0/src/configuration.rs",
+        "vendor/salsa-2022-macros-0.1.0/src/db.rs",
+        "vendor/salsa-2022-macros-0.1.0/src/input.rs",
+        "vendor/salsa-2022-macros-0.1.0/src/interned.rs",
+        "vendor/salsa-2022-macros-0.1.0/src/jar.rs",
+        "vendor/salsa-2022-macros-0.1.0/src/lib.rs",
+        "vendor/salsa-2022-macros-0.1.0/src/options.rs",
+        "vendor/salsa-2022-macros-0.1.0/src/salsa_struct.rs",
+        "vendor/salsa-2022-macros-0.1.0/src/tracked.rs",
+        "vendor/salsa-2022-macros-0.1.0/src/tracked_fn.rs",
+        "vendor/salsa-2022-macros-0.1.0/src/tracked_struct.rs",
+    ],
+    crate = "salsa_2022_macros",
+    crate_root = "vendor/salsa-2022-macros-0.1.0/src/lib.rs",
+    edition = "2021",
+    proc_macro = True,
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+    deps = [
+        ":eyre-0.6.8",
+        ":heck-0.4.1",
+        ":proc-macro2-1.0.56",
+        ":quote-1.0.26",
+        ":syn-1.0.109",
+    ],
 )
 
 third_party_rust_library(
@@ -11036,6 +11793,7 @@ third_party_rust_library(
     edition = "2021",
     features = [
         "bytes",
+        "default",
         "fs",
         "io-util",
         "libc",
@@ -11053,6 +11811,7 @@ third_party_rust_library(
         "sync",
         "time",
         "tokio-macros",
+        "tracing",
         "windows-sys",
     ],
     rustc_flags = ["--cap-lints=allow"],
@@ -11919,6 +12678,25 @@ third_party_rust_library(
     crate_root = "vendor/unicode-xid-0.2.4/src/lib.rs",
     edition = "2015",
     features = ["default"],
+    rustc_flags = ["--cap-lints=allow"],
+    visibility = [],
+)
+
+alias(
+    name = "unindent",
+    actual = ":unindent-0.2.1",
+    visibility = ["PUBLIC"],
+)
+
+third_party_rust_library(
+    name = "unindent-0.2.1",
+    srcs = [
+        "vendor/unindent-0.2.1/src/lib.rs",
+        "vendor/unindent-0.2.1/src/unindent.rs",
+    ],
+    crate = "unindent",
+    crate_root = "vendor/unindent-0.2.1/src/lib.rs",
+    edition = "2021",
     rustc_flags = ["--cap-lints=allow"],
     visibility = [],
 )

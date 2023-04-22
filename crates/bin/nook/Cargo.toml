@@ -1,5 +1,5 @@
 [package]
-name = "pb"
+name = "nook"
 version = "0.1.0"
 edition = "2021"
 authors = ["pulanski"]
@@ -12,8 +12,11 @@ utils = { path = "../../lib/utils" }
 watch = { path = "../../lib/watch" }
 
 cached = { workspace = true }
+codespan = { workspace = true }
+codespan-reporting = { workspace = true }
 derive-new = { workspace = true }
 derive_more = { workspace = true }
+eyre = { workspace = true }
 futures = { workspace = true }
 getset = { workspace = true }
 indicatif = { workspace = true }
@@ -26,9 +29,11 @@ progress = { workspace = true }
 rand = { workspace = true }
 shrinkwraprs = { workspace = true }
 smartstring = { workspace = true }
+thiserror = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
 tracing-indicatif = { workspace = true }
 tracing-subscriber = { workspace = true }
 typed-builder = { workspace = true }
 ulid = { workspace = true }
+unindent = { workspace = true }

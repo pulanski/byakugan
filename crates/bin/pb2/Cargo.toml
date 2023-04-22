@@ -11,16 +11,24 @@ driver = { path = "../../lib/driver" }
 utils = { path = "../../lib/utils" }
 watch = { path = "../../lib/watch" }
 
+cached = { workspace = true }
+derive-new = { workspace = true }
 derive_more = { workspace = true }
 futures = { workspace = true }
+getset = { workspace = true }
 indicatif = { workspace = true }
+lazy_static = { workspace = true }
 miette = { workspace = true }
+once_cell = { workspace = true }
 owo-colors = { workspace = true }
+parking_lot = { workspace = true }
 progress = { workspace = true }
 rand = { workspace = true }
+shrinkwraprs = { workspace = true }
 smartstring = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
 tracing-indicatif = { workspace = true }
 tracing-subscriber = { workspace = true }
+typed-builder = { workspace = true }
 ulid = { workspace = true }

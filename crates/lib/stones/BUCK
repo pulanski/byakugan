@@ -1,0 +1,37 @@
+rust_library(
+    name = "stones",
+    srcs = glob(["src/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        "//crates/lib/cli:cli",
+        "//crates/lib/utils:utils",
+        "//third-party:anyhow",
+        "//third-party:arrayref",
+        "//third-party:bytes",
+        "//third-party:derive-new",
+        "//third-party:derive_more",
+        "//third-party:downcast-rs",
+        "//third-party:dyn-clone",
+        "//third-party:getset",
+        "//third-party:miette",
+        "//third-party:notify",
+        "//third-party:notify-debouncer-mini",
+        "//third-party:once_cell",
+        "//third-party:serde",
+        "//third-party:parking_lot",
+        "//third-party:shrinkwraprs",
+        "//third-party:smartstring",
+        "//third-party:tracing",
+    ],
+    visibility = ["PUBLIC"],
+)
+
+rust_test(
+    name = "stones_test",
+    srcs = glob(["tests/**/*.rs"]),
+    edition = "2021",
+    deps = [
+        ":stones",
+    ],
+    visibility = ["PUBLIC"],
+)
