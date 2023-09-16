@@ -135,5 +135,4 @@ alias(
 python_binary(
     name = "salsa_fixup",
     main = "salsa_fixup.py",
-    # deps = ["//python/library:printlib"],
 )

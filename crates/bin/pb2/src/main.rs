@@ -1,9 +1,7 @@
-use cached::Cached;
 use parking_lot::RwLock;
 use std::sync::Arc;
 use std::time::Duration;
 use std::time::Instant;
-// use palette::{Hsv, Rgb};
 use cached::proc_macro::cached;
 use derive_more::Display;
 use derive_new::new;
@@ -59,7 +57,7 @@ static LONG_DURATION_START_TIME: Duration = Duration::from_secs(8);
 static VERY_LONG_DURATION_START_TIME: Duration = Duration::from_secs(12);
 
 // Track in-progress and completed tasks as well as cache hits
-static TASK_COUNTER: Lazy<TaskTracker> = Lazy::new(|| TaskTracker::new(0, 0, 0));
+static TASK_COUNTER: Lazy<TaskTracker> = Lazy::new(|| TaskTracker::new(0, 0));
 
 lazy_static! {
     // Colors
@@ -100,15 +98,14 @@ lazy_static! {
 struct TaskTrackerData {
     in_progress: usize,
     completed:   usize,
-    cache_hits:  usize,
 }
 
 #[derive(Debug, Clone, Shrinkwrap)]
 struct TaskTracker(Arc<RwLock<TaskTrackerData>>);
 
 impl TaskTracker {
-    pub fn new(in_progress: usize, completed: usize, cache_hits: usize) -> Self {
-        Self(Arc::new(RwLock::new(TaskTrackerData::new(in_progress, completed, cache_hits))))
+    pub fn new(in_progress: usize, completed: usize) -> Self {
+        Self(Arc::new(RwLock::new(TaskTrackerData::new(in_progress, completed))))
     }
 }
 
@@ -170,17 +167,6 @@ pub fn increment_completed_task() {
     );
 }
 
-pub fn increment_cache_hits() {
-    let mut task_counter = TASK_COUNTER.write();
-    *task_counter.cache_hits_mut() += 1;
-    tracing::trace!(
-        "Cache hit, in progress: {}, completed: {}, cache hits: {}",
-        task_counter.in_progress(),
-        task_counter.completed(),
-        task_counter.cache_hits()
-    );
-}
-
 #[instrument(level = "trace", skip_all)]
 #[cached(size = 100)]
 async fn build_sub_unit(sub_unit: u64) {
@@ -194,18 +180,6 @@ async fn build_sub_unit(sub_unit: u64) {
     }
 
     increment_completed_task(); // Increment the completed task count
-}
-
-#[derive(Debug, Clone, Copy, Display)]
-#[display(fmt = "rudolph")]
-pub enum TaskKind {
-    Build,
-    Run,
-    Test,
-    Embed,
-    Cache,
-    Clean,
-    DBRead,
 }
 
 pub fn short_running_task_msg(duration: Duration) -> String {
@@ -253,7 +227,7 @@ fn interpolate(a: u8, b: u8, t: f64) -> u8 {
 async fn build(unit: u64) {
     increment_in_progress_task(); // Increment in-progress tasks when a new task starts
 
-    let mut tasks = Vec::new();
+    // let mut tasks = Vec::new();
 
     let sleep_time =
         thread_rng().gen_range(Duration::from_millis(2500)..Duration::from_millis(5000));
@@ -261,40 +235,26 @@ async fn build(unit: u64) {
 
     let rand_num: f64 = thread_rng().gen();
 
-    if rand_num < 0.1 {
-        tasks.push(tokio::spawn(build_sub_unit(0)));
-        tasks.push(tokio::spawn(build_sub_unit(1)));
-        tasks.push(tokio::spawn(build_sub_unit(2)));
-    } else if rand_num < 0.3 {
-        tasks.push(tokio::spawn(build_sub_unit(0)));
-        tasks.push(tokio::spawn(build_sub_unit(1)));
-    } else if rand_num < 0.6 {
-        tasks.push(tokio::spawn(build_sub_unit(0)));
-    } else {
-        tasks.push(tokio::spawn(build_sub_unit(0)));
-        tasks.push(tokio::spawn(build_sub_unit(1)));
-        tasks.push(tokio::spawn(build_sub_unit(2)));
-        tasks.push(tokio::spawn(build_sub_unit(3)));
-        tasks.push(tokio::spawn(build_sub_unit(4)));
-    }
+    // if rand_num < 0.1 {
+    //     tasks.push(tokio::spawn(build_sub_unit(0)));
+    //     tasks.push(tokio::spawn(build_sub_unit(1)));
+    //     tasks.push(tokio::spawn(build_sub_unit(2)));
+    // } else if rand_num < 0.3 {
+    //     tasks.push(tokio::spawn(build_sub_unit(0)));
+    //     tasks.push(tokio::spawn(build_sub_unit(1)));
+    // } else if rand_num < 0.6 {
+    //     tasks.push(tokio::spawn(build_sub_unit(0)));
+    // } else {
+    //     tasks.push(tokio::spawn(build_sub_unit(0)));
+    //     tasks.push(tokio::spawn(build_sub_unit(1)));
+    //     tasks.push(tokio::spawn(build_sub_unit(2)));
+    //     tasks.push(tokio::spawn(build_sub_unit(3)));
+    //     tasks.push(tokio::spawn(build_sub_unit(4)));
+    // }
 
-    for task in tasks {
-        // Get the current cache size
-        let cache_size_before = BUILD_SUB_UNIT.lock().await.cache_size();
-
-        task.await.expect("Task failed");
-
-        // Get the new cache size
-        let cache_size_after = BUILD_SUB_UNIT.lock().await.cache_size();
-
-        // If the cache size has not changed, it means there was a cache hit
-        if cache_size_before == cache_size_after {
-            increment_cache_hits();
-        }
-
-        increment_completed_task(); // Increment completed tasks when a
-                                    // task is successfully completed
-    }
+    // for task in tasks {
+    //     task.await.expect("Task failed");
+    // }
 }
 
 #[tokio::main]
@@ -372,16 +332,12 @@ async fn main() {
         task_id[..5].to_string().cyan().italic(),
         "]".black()
     );
+    // .replace("{task_display}", &task_display)
 
-    let pre_template = "Executing tasks for command: {task_display}. {wide_msg} Jobs: In \
-                        progress: {in_progress}. Finished: {completed}. {cache_hits_percentage}%. \
-                        Time elapsed: {elapsed_subsec}
-\n{wide_bar}";
-
-    let template = pre_template
-        .replace("{task_display}", &task_display)
+    let template = "Executing tasks for command: {task_display}. {wide_msg} Jobs: In progress: \
+                    {in_progress}. Finished: {completed}. Time elapsed: {elapsed_subsec}
+\n{wide_bar}"
         .replace('.', &format!("{}", ".".black()))
-        .replace('%', &format!("{}", "%".black()))
         .replace(':', &format!("{}", ":".black()))
         .replace("In progress", &format!("{}", "In progress".bright_yellow()))
         .replace("Finished", &format!("{}", "Finished".green()));
@@ -401,14 +357,6 @@ async fn main() {
 
                 let _ = write!(writer, "{}", task_counter.completed);
             })
-            .with_key(
-                "cache_hits_percentage",
-                |state: &ProgressState, writer: &mut dyn std::fmt::Write| {
-                    let percentage = cache_hits_percentage();
-                    let percentage_msg = format!("{}", cache_hits_msg(percentage));
-                    let _ = write!(writer, "{percentage_msg}");
-                },
-            )
             .progress_chars("---"),
     );
     header_span.pb_start();
@@ -428,7 +376,6 @@ async fn main() {
         ":".black(),
         task_counter.completed.green().bold().italic()
     );
-    tracing::info!(" {}{}", cache_hits_msg(cache_hits_percentage()), "%".black());
     tracing::info!(
         " Time elapsed{} {}{}{}s",
         ":".black(),
@@ -456,21 +403,3 @@ fn task_msg_display(state: &ProgressState, writer: &mut dyn std::fmt::Write) {
         let _ = write!(writer, " {} ", short_running_task_msg(elapsed - SHORT_DURATION_START_TIME));
     }
 }
-
-fn cache_hits_percentage() -> f64 {
-    let task_counter = TASK_COUNTER.read();
-    if task_counter.completed() > &0 {
-        (*task_counter.cache_hits() as f64 / *task_counter.completed() as f64) * 100.0
-    } else {
-        0.0
-    }
-}
-
-// phases:
-// - scheduling
-//   - lays out an acyclic task graph
-// - executing
-//   - runs the task graph
-//     - runs tasks concurrently using a thread pool of configurable size
-//       (default: number of logical cores)
-//     - tasks

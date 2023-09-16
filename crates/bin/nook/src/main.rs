@@ -201,13 +201,9 @@ fn main() -> Result<(), eyre::Report> {
         diagnostic = Diagnostic::error()
             .with_message("Failed to run command in sandbox")
             .with_code("sandbox::command_failed")
-            // .with_notes(vec![
             .with_notes(vec![unindent::unindent(
-                "
-            expected type `String`
-                found type `Nat`
-        ",
-            )]);
+                "For more information, try running the command with `RUST_BACKTRACE=1`",
+            )])
 
         // return Err(eyre::eyre!(e));
     }
