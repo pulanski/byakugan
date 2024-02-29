@@ -73,7 +73,7 @@ convert_case = "0.6.0"
 cov-mark = "1.1.0"
 # criterion = { version = "0.3.1", features = [] }
 crossbeam = "0.8.2"
-crossbeam-channel = "0.5.7"
+crossbeam-channel = "0.5.12"
 crossbeam-epoch = "0.9.14"
 crossterm = { version = "0.26.1", default-features = false, features = [
     "event-stream",
