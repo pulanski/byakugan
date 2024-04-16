@@ -50,7 +50,7 @@ cfg-if = "1.0.0"
 chalk-solve = { version = "0.90.0", default-features = false }
 chalk-ir = "0.90.0"
 chalk-recursive = { version = "0.90.0", default-features = false }
-chrono = "=0.4.19"                                                 # Avoid a dependency iana-time-zone, which requires a fixup
+chrono = "=0.4.38"                                                 # Avoid a dependency iana-time-zone, which requires a fixup
 # clap = "4.0.7"
 clap = { version = "4", default-features = false, features = [
     "error-context",
