@@ -323,7 +323,7 @@ termios = "0.3"
 test-case = "3.1.0"
 # test-context = "0.1.4"
 text-size = "1.1.0"
-textwrap = { version = "0.14.0", default-features = false, features = [
+textwrap = { version = "0.16.0", default-features = false, features = [
     "unicode-width",
 ] }
 # textwrap = { version = "0.11", features = ["term_size"] }
